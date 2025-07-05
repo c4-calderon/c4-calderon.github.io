@@ -10,7 +10,7 @@ tags:
   - Seaborn
 ---
 
-# Seismic Events at Mount Vesuvius
+Analysis of Seismic Activity at Mount Vesuvius, using open data from the Italian Istituto Nazionale di Geofisica e Vulcanologia (INGV) 
 
 > **_Introductory note_**: 
 >
