@@ -1,3 +1,15 @@
+---
+title: 'Seismic Events at Mount Vesuvius'
+date: 2025-07-03
+permalink: /posts/2025/07/Seismic-Events-at-Mount-Vesuvius/
+tags:
+  - Data Analysis
+  - Mount Vesuvius
+  - Python
+  - Pandas
+  - Seaborn
+---
+
 # Seismic Events at Mount Vesuvius
 
 > **_Introductory note_**: 
