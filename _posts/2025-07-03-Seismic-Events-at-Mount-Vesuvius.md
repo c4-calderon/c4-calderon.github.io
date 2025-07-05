@@ -453,7 +453,7 @@ display(df[df['latitude'].isnull()])
 
 
     
-![png]({{site.url}}/files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_14_0.png)
+![png]({{site.url}}/files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_14_0.png)
     
 
 
