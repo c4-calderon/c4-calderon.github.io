@@ -453,7 +453,7 @@ display(df[df['latitude'].isnull()])
 
 
     
-![png]({{site.url}}/files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_14_0.png)
+![png]({{site.url}}/files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_14_0.png)
     
 
 
@@ -709,11 +709,12 @@ There is some displacement to the left of the distribution when `latitude` is nu
 Specifically, data points where the `latitude` is null tend to have lower values of `duration_magnitude_md` compared to the overall dataset.
 
 And lastly, since variables `duration_magnitude_md` and `md_error` are related, we can confidently asume that the missing (null) values correspond to the same row index.
-___
+
+---
 
 **Categorical fields**
 
-I would like to know the unique values of the categorical variables: [area, type, review_level]
+I would like to know the unique values of the categorical variables: [`area`, `type`, `review_level`]
 
 
 ```python
