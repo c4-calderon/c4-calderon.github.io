@@ -10,7 +10,7 @@ tags:
   - Seaborn
 ---
 
-Analysis of Seismic Activity at Mount Vesuvius, using open data from the Italian Istituto Nazionale di Geofisica e Vulcanologia (INGV) 
+Analysis of Seismic Activity at Mount Vesuvius, using open data from the Italian Istituto Nazionale di Geofisica e Vulcanologia (INGV).
 
 > **_Introductory note_**: 
 >
@@ -29,7 +29,7 @@ Taken from the TidyTuesday [post](https://github.com/rfordatascience/tidytuesday
 
 ## 1. Data Loading:
 
-Source: https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv
+Source: [https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv]
 
 
 ```python
@@ -37,6 +37,10 @@ Source: https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/
 import pandas as pd
 import numpy as np
 from IPython.display import display # we'll use DISPLAY to get a friendlier, easier-to-read printing format
+from warnings import filterwarnings
+
+# ignore warnings
+filterwarnings('ignore')
 
 # load the dataset
 url = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv"
@@ -181,7 +185,7 @@ We have a total of 11 variables and 12k registries
 
 ## 2. Data Exploration:
 
-Let's begin by exploring the contents of each variable and, more generally, evaluate the following:
+Let's begin by exploring the contents of each variable and, in general, evaluate the following:
 > * Data completeness
 > * Data cleanliness
 > * Data types
@@ -191,10 +195,15 @@ Let's begin by exploring the contents of each variable and, more generally, eval
 
 This will also allow us to get a better understanding of the dataset
 
+First, count the values for each field and some statistics for numerical columns:
+
 
 ```python
 # Review the contents of each variable
 df.info()
+
+# Describe the numerical fields
+display(df.describe())
 ```
 
     <class 'pandas.core.frame.DataFrame'>
@@ -216,20 +225,6 @@ df.info()
     dtypes: float64(5), int64(2), object(4)
     memory usage: 1.0+ MB
     
-
-As we can see, there are fields like `latitude` and `md_error` with a count of less than 12027 entries. We need to understand why.
-
-
-```python
-# Describe the numerical fields
-display(df.describe())
-
-# Print number of null values
-print('* Number of null values in each column: \n', df.isnull().sum())
-print()
-# Print number of empty strings
-print('* Number of empty strings in each column: \n', df[df == ""].sum())
-```
 
 
 <div>
@@ -345,8 +340,20 @@ print('* Number of empty strings in each column: \n', df[df == ""].sum())
 </div>
 
 
-    * Number of null values in each column: 
-     event_id                    0
+As we can see, there are fields like `latitude` and `md_error` with a count of less than 12027 entries. We need to understand why.
+
+
+```python
+# Print number of null values
+print('* Number of null values in each column:' )
+print(df.isnull().sum())
+# Print number of empty strings
+print('* Number of empty strings in each column:' )
+print(df[df == ""].sum())
+```
+
+    * Number of null values in each column:
+    event_id                    0
     time                        0
     latitude                 3433
     longitude                3433
@@ -358,9 +365,8 @@ print('* Number of empty strings in each column: \n', df[df == ""].sum())
     review_level                0
     year                        0
     dtype: int64
-    
-    * Number of empty strings in each column: 
-     event_id                 0.0
+    * Number of empty strings in each column:
+    event_id                 0.0
     time                       0
     latitude                 0.0
     longitude                0.0
@@ -373,6 +379,8 @@ print('* Number of empty strings in each column: \n', df[df == ""].sum())
     year                     0.0
     dtype: object
     
+
+We have some null values, but zero empty strings. This simplifies data cleaning a bit.
 
 Just to be sure, I will confirm if the row index for all missing values of `latitude`, `longitude` and `depth_km` are the same:
 
@@ -408,6 +416,8 @@ This is especially useful when comparing null indexes because:
 * The order of the indexes usually doesn’t matter.
 * What matters is which rows have null values, not the order in which they appear.
 
+Before more in-depth analysis of the three previous variables, I'd like to know the date range:
+
 
 ```python
 # Check the min and max values of `time`. It has dtype <object>. Let's try to check the values before any type conversion
@@ -416,6 +426,16 @@ print('Min time value: ', min(df['time']), ' ... ', 'Max time value: ', max(df['
 
     Min time value:  2011-04-20T00:27:24Z  ...  Max time value:  2024-12-31T17:02:32Z
     
+
+The dataset registers seismic activity from april 2011 up to the end of 2024.
+
+---
+
+**Visual exploration**
+
+Let's start analyzing the fields `latitude`, `longitude` and `depth_km`, and try to understand why there are missing values.
+
+First, create a histogram for each column:
 
 
 ```python
@@ -437,7 +457,7 @@ column_names = {
 }
 
 # Create 3-figure subplots for histograms
-fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+fig, axes = plt.subplots(3, 1, figsize=(8, 15))
 
 # Plot histograms for latitude, longitude, and depth_km
 for i, (col, name) in enumerate(column_names.items()):
@@ -446,16 +466,23 @@ for i, (col, name) in enumerate(column_names.items()):
 
 plt.tight_layout()
 plt.show()
-
-# Display the dataframe where latitude is empty or null
-display(df[df['latitude'].isnull()])
 ```
 
 
     
-![png]({{site.url}}/files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_14_0.png)
+![png]({{site.url}}/files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_18_0.png)
     
 
+
+Both `latitude` and `longitude` are close to a normal distribution and have a very small spread (st. deviation less than 0,005). On the other hand, `depth_km` shows a highly right-skewed distribution, where the majority of data is cluster at lower depths with rapid decline in frequency as depth increases.
+
+How does the dataset look where `latitude` (which applies the same for `longitude` and `depth_km`) is null?
+
+
+```python
+# Display the dataframe where latitude is empty or null
+display(df[df['latitude'].isnull()])
+```
 
 
 <div>
@@ -698,7 +725,7 @@ plt.show()
 
 
     
-![png]({{site.url}}/files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_16_0.png)
+![png]({{site.url}}/files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_22_0.png)
     
 
 
@@ -706,7 +733,11 @@ plt.show()
 
 There is some displacement to the left of the distribution when `latitude` is null in comparison to the general distribution, suggesting (but not confirmed yet) that the lack of a latitude value **is not a random event** within the dataset. There could be a correlation between having a null `latitude` and the values of  `duration_magnitude_md`.
 
-Specifically, data points where the `latitude` is null tend to have lower values of `duration_magnitude_md` compared to the overall dataset.
+Specifically, data points where the `latitude` is null tend to have lower values of `duration_magnitude_md` compared to the overall dataset and particularly, values less than zero.
+
+Reviewing the description of the columns again, we can see that:
+
+>  `duration_magnitude_md`: Duration magnitude (Md) of the seismic event, a measure of its energy release. Md is often used for smaller magnitude events, and **negative values can indicate very small events (microearthquakes)**. 
 
 And lastly, since variables `duration_magnitude_md` and `md_error` are related, we can confidently asume that the missing (null) values correspond to the same row index.
 
@@ -734,7 +765,7 @@ df[['area', 'type', 'review_level']].apply(lambda col: col.unique())
 Only the `review_level` field contains more than one unique value.
 
 Interestingly, only 2 entries are labeled as _revised_ , while all others fall under the _preliminary_ category. 
-The three categorical fields don't add too much information to the dataset. We already know that seismic events were recorded around Mount Vesuvius
+The three categorical fields don't add too much information to the dataset. We already know that seismic events were recorded around Mount Vesuvius, and on latitude and longitude locations practically identical.
 
 
 ```python
@@ -756,7 +787,7 @@ ___
 **How about some time series analysis now?**
 
 To perform time series analysis, we'll do the following:
-* Convert the `time` field to a proper timeseries type.
+* Convert the `time` field to a proper timedate type.
 * Add time frames for week,  month number and month name
 
 
@@ -777,10 +808,6 @@ df['short_month_name'] = df['time'].dt.month_name().str[:3] + ' ' + df['time'].d
 # Display the first rows and shape
 display(df.head())
 ```
-
-    C:\Users\thorc\AppData\Local\Temp\ipykernel_23436\2492272361.py:11: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
-      df['quarter'] = df['time'].dt.to_period('Q').astype(str)  # e.g., '2023Q1'
-    
 
 
 <div>
@@ -920,6 +947,8 @@ display(df.head())
 </div>
 
 
+Then, create line plots for each time frame: yearly, quarterly, monthly, weekly and daily.
+
 
 ```python
 ## Line plots in different time frames
@@ -982,15 +1011,9 @@ plt.tight_layout(rect=[0, 0.03, 1, 0.98])
 plt.show()
 ```
 
-    C:\Users\thorc\AppData\Local\Temp\ipykernel_23436\3418622805.py:26: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
-      monthly_counts = df.groupby(df['time'].dt.to_period('M')).size()
-    C:\Users\thorc\AppData\Local\Temp\ipykernel_23436\3418622805.py:36: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
-      weekly_counts = df.groupby(df['time'].dt.to_period('W')).size()
-    
-
 
     
-![png]({{site.url}}/files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_files/2025-07-03_Seismic-Events-at-Mount-Vesuvius_24_1.png)
+![png]({{site.url}}/files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_31_0.png)
     
 
 
@@ -1035,7 +1058,6 @@ This chart shows the finest level of detail.
 * Major Events: The largest single spike on this chart corresponds to the peak activity in 2019, indicating a day of intense seismic release.
 
 **Conclusion**: The daily view provides the strongest evidence that the seismic activity occurs in concentrated spikes. The overall increase in yearly events is due to either more frequent or more intense swarms over time.
-___
 
 ## **Overall Summary**
 
