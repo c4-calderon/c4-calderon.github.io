@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 gem "github-pages", group: :jekyll_plugins
 
 
-## Comment out the following when committing to GitHub
-## Uncomment when using bundler locally
+# # Comment out the following when committing to GitHub
+# # Uncomment when using bundler locally
 # source 'https://rubygems.org'
 
 # gem 'jekyll', '~> 3.10.0'

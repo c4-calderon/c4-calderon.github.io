@@ -29,7 +29,7 @@ Taken from the TidyTuesday [post](https://github.com/rfordatascience/tidytuesday
 
 ## 1. Data Loading:
 
-Source: [https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv]
+Source (csv file): [https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv]
 
 
 ```python
@@ -181,19 +181,21 @@ Also taken from the post, the description of the dataset fields:
 |review_level|	character|	Level of review the data has undergone. The data might be raw (preliminary) or revised (reviewed by someone).|
 |year|	integer|	Calendar year when the seismic event occurred.|
 
-We have a total of 11 variables and 12k registries
+🔍 We have a total of 11 variables and 12k observations.
 
-## 2. Data Exploration:
+## 2. Data Exploration
+
+### 2.1 Data Quality Assessment:
 
 Let's begin by exploring the contents of each variable and, in general, evaluate the following:
-> * Data completeness
-> * Data cleanliness
-> * Data types
-> * Remove duplicate rows
-> * Find missing/NA values
-> * Check for any possible anomaly
+* Data completeness
+* Data cleanliness
+* Data types
+* Remove duplicate rows
+* Find missing/NA values
+* Check for any possible anomaly
 
-This will also allow us to get a better understanding of the dataset
+This will also allow us to get a better understanding of the dataset.
 
 First, count the values for each field and some statistics for numerical columns:
 
@@ -340,7 +342,9 @@ display(df.describe())
 </div>
 
 
-As we can see, there are fields like `latitude` and `md_error` with a count of less than 12027 entries. We need to understand why.
+⚠️ As we can see, there are fields like `latitude` and `md_error` with a count of less than 12027 entries. We need to understand why:
+
+Let's count `null` and `empty strings` for each field:
 
 
 ```python
@@ -401,7 +405,7 @@ else:
     ✅ All index sets are equal
     
 
-💡 Why use `set()` to compare lists of indexes?
+**💡 Why use `set()` to compare lists of indexes?**
 
 When you compare lists or indexes using `==`, order matters. For example:
 ```
@@ -427,11 +431,11 @@ print('Min time value: ', min(df['time']), ' ... ', 'Max time value: ', max(df['
     Min time value:  2011-04-20T00:27:24Z  ...  Max time value:  2024-12-31T17:02:32Z
     
 
-The dataset registers seismic activity from april 2011 up to the end of 2024.
+The dataset provides seismic activity from april 2011 up to the end of 2024.
 
 ---
 
-**Visual exploration**
+### 2.2 Visualization:
 
 Let's start analyzing the fields `latitude`, `longitude` and `depth_km`, and try to understand why there are missing values.
 
@@ -474,7 +478,7 @@ plt.show()
     
 
 
-Both `latitude` and `longitude` are close to a normal distribution and have a very small spread (st. deviation less than 0,005). On the other hand, `depth_km` shows a highly right-skewed distribution, where the majority of data is cluster at lower depths with rapid decline in frequency as depth increases.
+Both `latitude` and `longitude` are close to a normal distribution and have a very small spread (st. deviation less than 0,005). On the other hand, `depth_km` shows a highly right-skewed distribution, where the majority of data is clustered at lower depths with rapid decline in frequency as depth increases.
 
 How does the dataset look where `latitude` (which applies the same for `longitude` and `depth_km`) is null?
 
@@ -677,7 +681,7 @@ display(df[df['latitude'].isnull()])
 </div>
 
 
-I find interesting that, for those events where latitude is empty, the `duration_magnitude_md` is very low (or close to zero). 
+I find interesting that, for those observations where latitude is empty, the `duration_magnitude_md` is very low (or close to zero). 
 Let's compare how the `duration_magnitude_md` series is distributed for all data vs when `latitude` is null
 
 
@@ -733,19 +737,17 @@ plt.show()
 
 There is some displacement to the left of the distribution when `latitude` is null in comparison to the general distribution, suggesting (but not confirmed yet) that the lack of a latitude value **is not a random event** within the dataset. There could be a correlation between having a null `latitude` and the values of  `duration_magnitude_md`.
 
-Specifically, data points where the `latitude` is null tend to have lower values of `duration_magnitude_md` compared to the overall dataset and particularly, values less than zero.
+Specifically, data points where the `latitude` is null tend to have lower or less than zero values of `duration_magnitude_md` compared to the overall dataset.
 
 Reviewing the description of the columns again, we can see that:
 
->  `duration_magnitude_md`: Duration magnitude (Md) of the seismic event, a measure of its energy release. Md is often used for smaller magnitude events, and **negative values can indicate very small events (microearthquakes)**. 
+>  **duration_magnitude_md**: Duration magnitude (Md) of the seismic event, a measure of its energy release. Md is often used for smaller magnitude events, and **negative values can indicate very small events (microearthquakes)**. 
 
-And lastly, since variables `duration_magnitude_md` and `md_error` are related, we can confidently asume that the missing (null) values correspond to the same row index.
-
----
+And lastly, since variables `duration_magnitude_md` and `md_error` are related, we can confidently assume that their missing (null) values correspond to the same row index.
 
 **Categorical fields**
 
-I would like to know the unique values of the categorical variables: [`area`, `type`, `review_level`]
+I would like to know the unique values of the categorical variables: `area`, `type`, `review_level`
 
 
 ```python
@@ -782,9 +784,9 @@ df['review_level'].value_counts()
     Name: count, dtype: int64
 
 
+---
 
-___
-**How about some time series analysis now?**
+### 2.3 How about some Time Series analysis now?
 
 To perform time series analysis, we'll do the following:
 * Convert the `time` field to a proper timedate type.
@@ -947,7 +949,7 @@ display(df.head())
 </div>
 
 
-Then, create line plots for each time frame: yearly, quarterly, monthly, weekly and daily.
+Then, create line plots for each time frame: _yearly, quarterly, monthly, weekly_ and _daily_.
 
 
 ```python
@@ -1017,7 +1019,7 @@ plt.show()
     
 
 
-### A few comments and conclusions here:
+## A few comments and insights here:
 
 **1. Total Events per Year:** 
 This plot gives us the long-term trend over the last decade.
@@ -1033,7 +1035,7 @@ This plot gives us the long-term trend over the last decade.
 **2. Total Events per Quarter:**
 This chart breaks down the yearly trend and reveals more detailed seasonal or periodic patterns.
 
-* Volatility: The quarterly data is much more volatile than the annual data. It shows that the increase in yearly events is not a smooth process but is driven by * specific quarters with very high activity.
+* Volatility: The quarterly data is much more volatile than the annual data. It shows that the increase in yearly events is not a smooth process but is driven by specific quarters with very high activity.
 
 * Identifying Peaks: The 2018 annual peak is clearly attributable to very high activity in the second and third quarters.
 
