@@ -29,7 +29,7 @@ Taken from the TidyTuesday [post](https://github.com/rfordatascience/tidytuesday
 
 ## 1. Data Loading:
 
-Source (csv file): [https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv]
+Source (csv file): <a href="https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv" target="_blank" rel="noopener noreferrer">rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv</a>
 
 
 ```python
