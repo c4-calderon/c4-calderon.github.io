@@ -55,7 +55,7 @@ print("dataframe size is:", df.shape)
 ```
 
 
-<div>
+<div class="table-container">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -229,7 +229,7 @@ display(df.describe())
     
 
 
-<div>
+<div class="table-container">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -489,7 +489,7 @@ display(df[df['latitude'].isnull()])
 ```
 
 
-<div>
+<div class="table-container">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -812,7 +812,7 @@ display(df.head())
 ```
 
 
-<div>
+<div class="table-container">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;

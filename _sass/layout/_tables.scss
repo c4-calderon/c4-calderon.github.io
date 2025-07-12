@@ -36,3 +36,9 @@ td {
 tr, td, th {
   vertical-align: middle;
 }
+
+// Handle overflow for tables
+// This is useful for responsive designs where tables might not fit in smaller screens
+.table-container {
+  overflow-x: auto;
+}
