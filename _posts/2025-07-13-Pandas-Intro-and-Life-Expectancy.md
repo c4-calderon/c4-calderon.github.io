@@ -16,9 +16,9 @@ Learn how to use the `pandas` library in Python for data analysis and manipulati
 As described on the official [pandas](https://pandas.pydata.org/) site: 
 > `pandas` is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.
 
-I this post, we'll explore its main functionalities using the `Life Expectancy at Birth` dataset, available [here](https://clio-infra.eu/Indicators/LifeExpectancyatBirthTotal.html#) and provided by [*Clio Infra*](https://clio-infra.eu/index.html).
+In this post, we'll explore its main functionalities using the `Life Expectancy at Birth` dataset, available [here](https://clio-infra.eu/Indicators/LifeExpectancyatBirthTotal.html#) and provided by [*Clio Infra*](https://clio-infra.eu/index.html).
 
-**Clio Infra** is a collaborative project, primarily housed at the **International Institute of Social History (IISH)** in the Netherlands, that gathers and provides access to extensive historical data.
+>**Clio Infra** is a collaborative project, primarily housed at the International Institute of Social History (IISH) in the Netherlands, that gathers and provides access to extensive historical data.
 
 
 ```python
