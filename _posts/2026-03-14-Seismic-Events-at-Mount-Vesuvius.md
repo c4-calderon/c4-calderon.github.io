@@ -1,6 +1,6 @@
 ---
 title: 'Seismic Events at Mount Vesuvius'
-date: 2025-07-03
+date: 2026-03-14
 permalink: /posts/2025/07/Seismic-Events-at-Mount-Vesuvius/
 tags:
   - Data Analysis
@@ -474,7 +474,7 @@ plt.show()
 
 
     
-![png]({{site.url}}/files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_18_0.png)
+![png]({{site.url}}/images/posts/vesuvius-analysis/2026-03-14-Seismic-Events-at-Mount-Vesuvius_18_0.png)
     
 
 
@@ -729,7 +729,7 @@ plt.show()
 
 
     
-![png]({{site.url}}/files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_22_0.png)
+![png]({{site.url}}/images/posts/vesuvius-analysis/2026-03-14-Seismic-Events-at-Mount-Vesuvius_22_0.png)
     
 
 
@@ -1015,7 +1015,7 @@ plt.show()
 
 
     
-![png]({{site.url}}/files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_files/2025-07-03-Seismic-Events-at-Mount-Vesuvius_31_0.png)
+![png]({{site.url}}/images/posts/vesuvius-analysis/2026-03-14-Seismic-Events-at-Mount-Vesuvius_31_0.png)
     
 
 

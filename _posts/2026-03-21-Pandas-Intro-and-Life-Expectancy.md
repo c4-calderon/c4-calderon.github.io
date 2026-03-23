@@ -1,6 +1,6 @@
 ---
 title: 'An Easy Introduction to Pandas'
-date: 2025-07-13
+date: 2026-03-21
 permalink: /posts/2025/07/A Light Introduction to Pandas/
 tags:
   - Data Analysis

@@ -1,0 +1,12 @@
+# Ignorar archivos pesados comunes de datos por seguridad de GitHub
+*.csv
+*.xlsx
+*.xls
+*.json
+*.parquet
+*.zip
+*.7z
+
+# Permitir archivos de control para Git
+!.gitkeep
+!README.md
