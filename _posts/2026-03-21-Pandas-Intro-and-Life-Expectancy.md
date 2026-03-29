@@ -1,7 +1,7 @@
 ---
-title: 'An Easy Introduction to Pandas'
+title: "An Easy Introduction to Pandas"
 date: 2026-03-21
-permalink: /posts/2025/07/A Light Introduction to Pandas/
+permalink: /posts/2026/03/A-Light-Introduction-to-Pandas/
 tags:
   - Data Analysis
   - Python
@@ -13,13 +13,13 @@ Learn how to use the `pandas` library in Python for data analysis and manipulati
 
 ## Introduction
 
-As described on the official [pandas](https://pandas.pydata.org/) site: 
+As described on the official [pandas](https://pandas.pydata.org/) site:
+
 > `pandas` is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool, built on top of the Python programming language.
 
-In this post, we'll explore its main functionalities using the `Life Expectancy at Birth` dataset, available [here](https://clio-infra.eu/Indicators/LifeExpectancyatBirthTotal.html#) and provided by [*Clio Infra*](https://clio-infra.eu/index.html).
+In this post, we'll explore its main functionalities using the `Life Expectancy at Birth` dataset, available [here](https://clio-infra.eu/Indicators/LifeExpectancyatBirthTotal.html#) and provided by [_Clio Infra_](https://clio-infra.eu/index.html).
 
->**Clio Infra** is a collaborative project, primarily housed at the International Institute of Social History (IISH) in the Netherlands, that gathers and provides access to extensive historical data.
-
+> **Clio Infra** is a collaborative project, primarily housed at the International Institute of Social History (IISH) in the Netherlands, that gathers and provides access to extensive historical data.
 
 ```python
 # Turn off warnings
@@ -31,19 +31,21 @@ warnings.filterwarnings("ignore")
 
 You can install `pandas` from your terminal, depending on your Python package manager:
 
-* For `pip` users: 
-```
+- For `pip` users:
+
+```python
 pip install pandas
 ```
-* For `conda` users: 
-```
+
+- For `conda` users:
+
+```python
 conda install -c conda-forge pandas
 ```
 
 💡 Tip: If you're using _Anaconda_, pandas usually comes pre-installed.
 
 Then, import `pandas`. It is common to use `pd` as alias:
-
 
 ```python
 import pandas as pd
@@ -52,7 +54,6 @@ import pandas as pd
 ## 2. Creating your first dataframe
 
 You can create your dataframe from several Data Structures:
-
 
 ```python
 # 1. Python Dictionaries
@@ -110,11 +111,10 @@ df = pd.read_sql_query('SELECT * FROM your_table_name', conn)
 
 As mentioned earlier, we'll be using the dataset _Life Expectancy at Birth_, which is provided as an Excel (`xlsx`) file. This file contains several sheets, including:
 
-* `"Data Clio Infra Format"` (wide format)
-* `"Data Long Format"` (tidy format)
+- `"Data Clio Infra Format"` (wide format)
+- `"Data Long Format"` (tidy format)
 
 Since the Excel file has more than one sheet, we need to explicitly specify which one to load using the `sheet_name` argument in `pandas.read_excel()`:
-
 
 ```python
 # Load "Data Clio Infra Format"
@@ -127,12 +127,11 @@ df_tidy = pd.read_excel('LifeExpectancyatBirth(Total)_Broad.xlsx', sheet_name='D
 
 Let's try out some essential exploration methods here:
 
-* **`df.shape`** – Returns the number of rows and columns in the DataFrame.
-* **`df.columns`** : – Lists the column names as a pandas `Index` [object](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dtypes.html)
-* **`df.head(n)`** / **`df.tail(n)`** : – Displays the first or last `n` rows; defaults to **5** if `n` is not specified.
-* **`df.info()`** – Summarizes the dataset, showing column data types, non-null counts, and memory usage. Useful for identifying missing data.
-* **`df.describe()`** – Generates summary statistics for numeric columns (mean, std, min, max, etc.).
-
+- **`df.shape`** – Returns the number of rows and columns in the DataFrame.
+- **`df.columns`** : – Lists the column names as a pandas `Index` [object](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dtypes.html)
+- **`df.head(n)`** / **`df.tail(n)`** : – Displays the first or last `n` rows; defaults to **5** if `n` is not specified.
+- **`df.info()`** – Summarizes the dataset, showing column data types, non-null counts, and memory usage. Useful for identifying missing data.
+- **`df.describe()`** – Generates summary statistics for numeric columns (mean, std, min, max, etc.).
 
 ```python
 # df.shape
@@ -140,25 +139,21 @@ print('* The df shape is: ', df_tidy.shape)
 ```
 
     * The df shape is:  (12863, 4)
-    
-
 
 ```python
 # df.columns
 print('* df columns: \n', df_tidy.columns)  # Display df columns
 ```
 
-    * df columns: 
+    * df columns:
      Index(['ccode', 'country.name', 'year', 'value'], dtype='object')
-    
-
 
 ```python
 df.head(n)
 print('* First 15 rows: \n', df_tidy.head(15))  # Display first 15 rows
 ```
 
-    * First 15 rows: 
+    * First 15 rows:
          ccode    country.name  year  value
     0     826  United Kingdom  1543  33.94
     1     826  United Kingdom  1548  38.82
@@ -175,15 +170,13 @@ print('* First 15 rows: \n', df_tidy.head(15))  # Display first 15 rows
     12    826  United Kingdom  1603  38.53
     13    826  United Kingdom  1608  39.59
     14    826  United Kingdom  1613  36.79
-    
-
 
 ```python
 df.tail(n)
 print('* Last 8 rows: \n', df_tidy.tail(8))  # Display last 8 rows
 ```
 
-    * Last 8 rows: 
+    * Last 8 rows:
             ccode    country.name  year  value
     12855    724           Spain  2011  82.40
     12856    752          Sweden  2011  81.76
@@ -193,8 +186,6 @@ print('* Last 8 rows: \n', df_tidy.tail(8))  # Display last 8 rows
     12860    840   United States  2011  78.70
     12861    484          Mexico  2012  74.40
     12862    792          Turkey  2012  74.60
-    
-
 
 ```python
 df.info()
@@ -204,23 +195,21 @@ df_tidy.info()
     <class 'pandas.core.frame.DataFrame'>
     RangeIndex: 12863 entries, 0 to 12862
     Data columns (total 4 columns):
-     #   Column        Non-Null Count  Dtype  
-    ---  ------        --------------  -----  
-     0   ccode         12863 non-null  int64  
-     1   country.name  12863 non-null  object 
-     2   year          12863 non-null  int64  
+     #   Column        Non-Null Count  Dtype
+    ---  ------        --------------  -----
+     0   ccode         12863 non-null  int64
+     1   country.name  12863 non-null  object
+     2   year          12863 non-null  int64
      3   value         12863 non-null  float64
     dtypes: float64(1), int64(2), object(1)
     memory usage: 402.1+ KB
-    
-
 
 ```python
 df.describe()
 print('* Some descriptive statistics: \n', df_tidy.describe())
 ```
 
-    * Some descriptive statistics: 
+    * Some descriptive statistics:
                    ccode          year         value
     count  12863.000000  12863.000000  12863.000000
     mean     431.595351   1966.640830     58.418561
@@ -230,25 +219,20 @@ print('* Some descriptive statistics: \n', df_tidy.describe())
     50%      417.000000   1974.000000     60.300000
     75%      662.000000   1992.000000     69.823000
     max      894.000000   2012.000000     83.090000
-    
 
 ## 5. Selecting and Filtering Data
-
 
 ```python
 # Select a specific column
 df_wide['country name']
 ```
 
-
-
-
     0      Afghanistan
     1          Albania
     2          Algeria
     3          Andorra
     4           Angola
-              ...     
+              ...
     193      Venezuela
     194        Vietnam
     195          Yemen
@@ -256,16 +240,10 @@ df_wide['country name']
     197       Zimbabwe
     Name: country name, Length: 198, dtype: object
 
-
-
-
 ```python
 # Filter rows based on a condition
 df_wide[df_wide['country name'] == 'Germany']
 ```
-
-
-
 
 <div class="table-container">
 <style scoped>
@@ -280,6 +258,7 @@ df_wide[df_wide['country name'] == 'Germany']
     .dataframe thead th {
         text-align: right;
     }
+
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -338,16 +317,10 @@ df_wide[df_wide['country name'] == 'Germany']
 <p>1 rows × 553 columns</p>
 </div>
 
-
-
-
 ```python
 # Select multiple columns
 df_wide[['ccode', 'country name', '2000']]
 ```
-
-
-
 
 <div class="table-container">
 <style scoped>
@@ -362,6 +335,7 @@ df_wide[['ccode', 'country name', '2000']]
     .dataframe thead th {
         text-align: right;
     }
+
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -444,11 +418,9 @@ df_wide[['ccode', 'country name', '2000']]
 <p>198 rows × 3 columns</p>
 </div>
 
-
-
 There is a particularly useful method for reshaping data, from wide to long (tidy) format:
-* **`df.melt()`** - Unpivots a DataFrame from wide to long format, optionally leaving identifiers set.
 
+- **`df.melt()`** - Unpivots a DataFrame from wide to long format, optionally leaving identifiers set.
 
 ```python
 # df.melt()
@@ -472,17 +444,15 @@ print(df_long_reshaped)
     109095  887.0        Yemen  2050              NaN
     109096  894.0       Zambia  2050              NaN
     109097  716.0     Zimbabwe  2050              NaN
-    
+
     [109098 rows x 4 columns]
-    
 
 ## 6. Data Cleaning & Transformation
 
 You can perform common data cleaning steps like removing missing values, change column types, apply filters to columns, etc.:
 
-
 ```python
-# Remove missing values: 
+# Remove missing values:
 df_clean = df_long_reshaped.dropna()
 print(df_clean)
 ```
@@ -499,10 +469,8 @@ print(df_clean)
     101367  840.0   United States  2011            78.70
     101486  484.0          Mexico  2012            74.40
     101558  792.0          Turkey  2012            74.60
-    
-    [12863 rows x 4 columns]
-    
 
+    [12863 rows x 4 columns]
 
 ```python
 # Change column types
@@ -519,10 +487,8 @@ print(df_recent.head())
     79216   56.0      Belgium  1900            46.52
     79220   68.0      Bolivia  1900            26.00
     79223   76.0       Brazil  1900            29.00
-    
 
 You can also aggregate and group your data:
-
 
 ```python
 # Calculate average life expectancy by country:
@@ -552,8 +518,6 @@ print(df_avg.head(20)) # Display first 20 countries (not sorted)
     Bhutan                 45.805167
     Bolivia                50.594545
     Name: life_expectancy, dtype: float64
-    
-
 
 ```python
 # Sort countries by average life expectancy:
@@ -583,12 +547,10 @@ print(df_avg.head(20)) # Display Top 20 countries (sorted)
     Sweden            69.701964
     Norway            69.603929
     Name: life_expectancy, dtype: float64
-    
 
 ## 7. Common Data Operations
 
 Here are some common data operations:
-
 
 ```python
 # Rename columns
@@ -602,8 +564,6 @@ print(df_clean.head())
     10682  826.0  United Kingdom  1553            39.59
     11672  826.0  United Kingdom  1558            22.38
     12662  826.0  United Kingdom  1563            36.66
-    
-
 
 ```python
 # Sort by columns
@@ -623,10 +583,8 @@ print(df_clean)
     94474   116.0  Cambodia  1977           14.491
     94672   116.0  Cambodia  1978           14.491
     94870   116.0  Cambodia  1979           14.491
-    
-    [12863 rows x 4 columns]
-    
 
+    [12863 rows x 4 columns]
 
 ```python
 # Create new columns
@@ -641,8 +599,6 @@ print(df_clean.head())
     100667  392.0   Japan  2008            82.75                     82.8
     101261  392.0   Japan  2011            82.70                     82.7
     101259  380.0   Italy  2011            82.70                     82.7
-    
-
 
 ```python
 # Apply a function to a column
@@ -651,38 +607,36 @@ print(df_clean)
 ```
 
             ccode   country  year  life_expectancy  life_expectancy_rounded  \
-    100865  392.0     Japan  2009           83.090                     83.1   
-    101063  392.0     Japan  2010           82.900                     82.9   
-    100667  392.0     Japan  2008           82.750                     82.8   
-    101261  392.0     Japan  2011           82.700                     82.7   
-    101259  380.0     Italy  2011           82.700                     82.7   
-    ...       ...       ...   ...              ...                      ...   
-    94276   116.0  Cambodia  1976           14.491                     14.5   
-    94078   116.0  Cambodia  1975           14.491                     14.5   
-    94474   116.0  Cambodia  1977           14.491                     14.5   
-    94672   116.0  Cambodia  1978           14.491                     14.5   
-    94870   116.0  Cambodia  1979           14.491                     14.5   
-    
-           life_expectancy_category  
-    100865                     High  
-    101063                     High  
-    100667                     High  
-    101261                     High  
-    101259                     High  
-    ...                         ...  
-    94276                       Low  
-    94078                       Low  
-    94474                       Low  
-    94672                       Low  
-    94870                       Low  
-    
+    100865  392.0     Japan  2009           83.090                     83.1
+    101063  392.0     Japan  2010           82.900                     82.9
+    100667  392.0     Japan  2008           82.750                     82.8
+    101261  392.0     Japan  2011           82.700                     82.7
+    101259  380.0     Italy  2011           82.700                     82.7
+    ...       ...       ...   ...              ...                      ...
+    94276   116.0  Cambodia  1976           14.491                     14.5
+    94078   116.0  Cambodia  1975           14.491                     14.5
+    94474   116.0  Cambodia  1977           14.491                     14.5
+    94672   116.0  Cambodia  1978           14.491                     14.5
+    94870   116.0  Cambodia  1979           14.491                     14.5
+
+           life_expectancy_category
+    100865                     High
+    101063                     High
+    100667                     High
+    101261                     High
+    101259                     High
+    ...                         ...
+    94276                       Low
+    94078                       Low
+    94474                       Low
+    94672                       Low
+    94870                       Low
+
     [12863 rows x 6 columns]
-    
 
 ## 8. Working with Dates
 
 Since our example DataFrame only contains years, we'll add a new column with the date set to January 1st of each year:
-
 
 ```python
 # Concatenate the `year` with January 1st ('-01-01') to create the column date
@@ -692,19 +646,18 @@ print(df_clean)
 
 ```
 
-
     ---------------------------------------------------------------------------
 
     OverflowError                             Traceback (most recent call last)
 
     File pandas/_libs/tslibs/strptime.pyx:415, in pandas._libs.tslibs.strptime.array_strptime()
-    
+
 
     OverflowError: Overflow occurred in npy_datetimestruct_to_datetime
 
-    
+
     The above exception was the direct cause of the following exception:
-    
+
 
     OutOfBoundsDatetime                       Traceback (most recent call last)
 
@@ -713,7 +666,7 @@ print(df_clean)
           2 # Please take into account that year is an integer, so we need to convert it to string first
     ----> 3 df_clean['date'] = pd.to_datetime(df_clean['year'].astype(str) + '-01-01', format='%Y-%m-%d')
           4 print(df_clean)
-    
+
 
     File c:\Users\thorc\miniconda3\envs\ds_env\Lib\site-packages\pandas\core\tools\datetimes.py:1068, in to_datetime(arg, errors, dayfirst, yearfirst, utc, format, exact, unit, infer_datetime_format, origin, cache)
        1066             result = arg.tz_localize("utc")
@@ -721,7 +674,7 @@ print(df_clean)
     -> 1068     cache_array = _maybe_cache(arg, format, cache, convert_listlike)
        1069     if not cache_array.empty:
        1070         result = arg.map(cache_array)
-    
+
 
     File c:\Users\thorc\miniconda3\envs\ds_env\Lib\site-packages\pandas\core\tools\datetimes.py:249, in _maybe_cache(arg, format, cache, convert_listlike)
         247 unique_dates = unique(arg)
@@ -729,7 +682,7 @@ print(df_clean)
     --> 249     cache_dates = convert_listlike(unique_dates, format)
         250     # GH#45319
         251     try:
-    
+
 
     File c:\Users\thorc\miniconda3\envs\ds_env\Lib\site-packages\pandas\core\tools\datetimes.py:435, in _convert_listlike_datetimes(arg, format, name, utc, unit, errors, dayfirst, yearfirst, exact)
         433 # `format` could be inferred, or user didn't ask for mixed-format parsing.
@@ -743,7 +696,7 @@ print(df_clean)
         446 if tz_parsed is not None:
         447     # We can take a shortcut since the datetime64 numpy array
         448     # is in UTC
-    
+
 
     File c:\Users\thorc\miniconda3\envs\ds_env\Lib\site-packages\pandas\core\tools\datetimes.py:469, in _array_strptime_with_fallback(arg, name, utc, fmt, exact, errors)
         458 def _array_strptime_with_fallback(
@@ -757,21 +710,20 @@ print(df_clean)
     --> 469     result, tz_out = array_strptime(arg, fmt, exact=exact, errors=errors, utc=utc)
         470     if tz_out is not None:
         471         unit = np.datetime_data(result.dtype)[0]
-    
+
 
     File pandas/_libs/tslibs/strptime.pyx:501, in pandas._libs.tslibs.strptime.array_strptime()
-    
+
 
     File pandas/_libs/tslibs/strptime.pyx:418, in pandas._libs.tslibs.strptime.array_strptime()
-    
+
 
     OutOfBoundsDatetime: Out of bounds nanosecond timestamp: 1583-01-01, at position 181. You might want to try:
         - passing `format` if your strings have a consistent format;
         - passing `format='ISO8601'` if your strings are all ISO8601 but not necessarily in exactly the same format;
         - passing `format='mixed'`, and the format will be inferred for each element individually. You might want to use `dayfirst` alongside this.
 
-
-🤔 You might be wondering about this error... 
+🤔 You might be wondering about this error...
 
 Well, I left it there on purpose. I just learned that `pandas`'s datetime type (`datetime[ns]`) only supports dates from September 21, 1677 onward.
 
@@ -791,7 +743,6 @@ Timestamp('1677-09-21 00:12:43.145224193')
 1. Only use `datetime64[ns]` for years after 1677.
 2. Reuse the `df_recent` DataFrame we created earlier, which already filters out years before 1900.
 
-
 ```python
 # Try again
 df_recent['date'] = pd.to_datetime(df_recent['year'].astype(str) + '-01-01', format='%Y-%m-%d')
@@ -810,10 +761,8 @@ print(df_recent)
     101367  840.0   United States  2011            78.70 2011-01-01
     101486  484.0          Mexico  2012            74.40 2012-01-01
     101558  792.0          Turkey  2012            74.60 2012-01-01
-    
-    [12057 rows x 5 columns]
-    
 
+    [12057 rows x 5 columns]
 
 ```python
 # Extract week and month name from the date
@@ -834,14 +783,12 @@ print(df_recent)
     101367  840.0   United States  2011            78.70 2011-01-01    52  January
     101486  484.0          Mexico  2012            74.40 2012-01-01    52  January
     101558  792.0          Turkey  2012            74.60 2012-01-01    52  January
-    
+
     [12057 rows x 7 columns]
-    
 
 ## 9. Merging, Joining and Concatenating
 
 Pandas makes it easy to combine datasets from different sources. Here's how to do it using basic examples:
-
 
 ```python
 # DataFrame 1
@@ -857,7 +804,6 @@ df_titles = pd.DataFrame({
 })
 ```
 
-
 ```python
 # merge() - Merge on a common key
 df_merged = pd.merge(df_teams, df_titles, on="Team")
@@ -868,10 +814,8 @@ print(df_merged)
     0        Real Madrid    Spain                       14
     1     Bayern München  Germany                        6
     2  Manchester United  England                        3
-    
 
 Use `how='left'`, `'right'`, `'outer'`, or `'inner'` to control the join type (default is `'inner'`).
-
 
 ```python
 # concat() – Concatenate vertically or horizontally
@@ -891,12 +835,10 @@ print(df_combined)
     2  Manchester United      England
     3           Juventus        Italy
     4               Ajax  Netherlands
-    
 
 You can also concatenate horizontally by setting `axis=1`, for example when combining columns.
 
 ## 10. Exporting Data
-
 
 ```python
 # Save to CSV and Excel files. index=False prevents writing row indices to the file
@@ -907,7 +849,6 @@ df_avg.to_excel("life_expectancy_average.xlsx", index=False)
 ## 💡Tips and Tricks
 
 Use `.query()` for cleaner filtering:
-
 
 ```python
 print(df_recent.query("`country name` == 'Germany' and year > 1960").head(10))
@@ -924,10 +865,8 @@ print(df_recent.query("`country name` == 'Germany' and year > 1960").head(10))
     92727  276.0      Germany  1968             70.4 1968-01-01     1  January
     92925  276.0      Germany  1969             70.3 1969-01-01     1  January
     93123  276.0      Germany  1970             70.6 1970-01-01     1  January
-    
 
 Select values with `.loc[]` and `.iloc[]`:
-
 
 ```python
 print(df_recent.loc[91935, "country name"])     # label-based
@@ -936,7 +875,6 @@ print(df_recent.iloc[0, 1])                     # index-based
 
     Germany
     Argentina
-    
 
 ## Final thoughts
 
