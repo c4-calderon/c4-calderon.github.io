@@ -1,7 +1,7 @@
 ---
-title: 'Seismic Events at Mount Vesuvius'
+title: "Seismic Events at Mount Vesuvius"
 date: 2026-03-14
-permalink: /posts/2025/07/Seismic-Events-at-Mount-Vesuvius/
+permalink: /posts/2026/03/Seismic-Events-at-Mount-Vesuvius/
 tags:
   - Data Analysis
   - Mount Vesuvius
@@ -12,7 +12,7 @@ tags:
 
 Analysis of Seismic Activity at Mount Vesuvius, using open data from the Italian Istituto Nazionale di Geofisica e Vulcanologia (INGV).
 
-> **_Introductory note_**: 
+> **_Introductory note_**:
 >
 > To begin this data analysis journey, I'd like to mention that one of the objectives of this `Blog Posts` section is to approach data I'm not familiar with. All my work experience in the automotive industry so far has been related to logistics, material and information flow, quality, cost, production volume, budgeting and maintenance.
 
@@ -25,12 +25,12 @@ They have an abundant quantity of datasets, organized by year, week and date of 
 ## Dataset General Information
 
 Taken from the TidyTuesday [post](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-05-13/readme.md):
+
 > The dataset this week explores seismic events detected at the famous Mount Vesuvius in Italy. It comes from the [Italian Istituto Nazionale di Geofisica e Vulcanologia (INGV)](https://www.ingv.it/)'s [Data Portal](https://data.ingv.it/en/) and can be explored along with other seismic areas on the [GOSSIP website](https://terremoti.ov.ingv.it/gossip/vesuvio/index.html). The raw data was saved as individual CSV files from the GOSSIP website and some values were translated from Italian to English.
 
-## 1. Data Loading:
+## 1. Data Loading
 
-Source (csv file): <a href="https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv" target="_blank" rel="noopener noreferrer">rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv</a>
-
+Source: [https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv]
 
 ```python
 # import libraries
@@ -47,13 +47,11 @@ url = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2
 df = pd.read_csv(url)
 ```
 
-
 ```python
 # Display the first rows of the dataframe and shape
 display(df.head())
 print("dataframe size is:", df.shape)
 ```
-
 
 <div class="table-container">
 <style scoped>
@@ -68,6 +66,7 @@ print("dataframe size is:", df.shape)
     .dataframe thead th {
         text-align: right;
     }
+
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -161,44 +160,40 @@ print("dataframe size is:", df.shape)
 </table>
 </div>
 
-
     dataframe size is: (12027, 11)
-    
 
 Also taken from the post, the description of the dataset fields:
 
-|variable|	class|	description|
-|--------|-------|-------------|
-|event_id|	integer|	Unique identifier for each seismic event recorded.|
-|time|	datetime|	Date and time when the seismic event occurred, in UTC format.|
-|latitude|	double|	Geographic latitude of the seismic event location in decimal degrees.|
-|longitude|	double|	Geographic longitude of the seismic event location in decimal degrees.|
-|depth_km|	double|	Depth of the seismic event epicenter in kilometers below the surface.|
-|duration_magnitude_md|	double|	Duration magnitude (Md) of the seismic event, a measure of its energy release. Md is often used for smaller magnitude events, and negative values can indicate very small events (microearthquakes).
-|md_error|	double|	Estimated error margin ("plus or minus") for the duration magnitude measurement.|
-|area|	character|	Geographic area where the seismic event was recorded. In this case, the Mt. Vesuvius area.|
-|type|	character|	Classification of the seismic event, such as "earthquake" or "eruption."|
-|review_level|	character|	Level of review the data has undergone. The data might be raw (preliminary) or revised (reviewed by someone).|
-|year|	integer|	Calendar year when the seismic event occurred.|
+| variable              | class     | description                                                                                                                                                                                          |
+| --------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| event_id              | integer   | Unique identifier for each seismic event recorded.                                                                                                                                                   |
+| time                  | datetime  | Date and time when the seismic event occurred, in UTC format.                                                                                                                                        |
+| latitude              | double    | Geographic latitude of the seismic event location in decimal degrees.                                                                                                                                |
+| longitude             | double    | Geographic longitude of the seismic event location in decimal degrees.                                                                                                                               |
+| depth_km              | double    | Depth of the seismic event epicenter in kilometers below the surface.                                                                                                                                |
+| duration_magnitude_md | double    | Duration magnitude (Md) of the seismic event, a measure of its energy release. Md is often used for smaller magnitude events, and negative values can indicate very small events (microearthquakes). |
+| md_error              | double    | Estimated error margin ("plus or minus") for the duration magnitude measurement.                                                                                                                     |
+| area                  | character | Geographic area where the seismic event was recorded. In this case, the Mt. Vesuvius area.                                                                                                           |
+| type                  | character | Classification of the seismic event, such as "earthquake" or "eruption."                                                                                                                             |
+| review_level          | character | Level of review the data has undergone. The data might be raw (preliminary) or revised (reviewed by someone).                                                                                        |
+| year                  | integer   | Calendar year when the seismic event occurred.                                                                                                                                                       |
 
-🔍 We have a total of 11 variables and 12k observations.
+We have a total of 11 variables and 12k registries
 
 ## 2. Data Exploration
 
-### 2.1 Data Quality Assessment:
-
 Let's begin by exploring the contents of each variable and, in general, evaluate the following:
-* Data completeness
-* Data cleanliness
-* Data types
-* Remove duplicate rows
-* Find missing/NA values
-* Check for any possible anomaly
 
-This will also allow us to get a better understanding of the dataset.
+> - Data completeness
+> - Data cleanliness
+> - Data types
+> - Remove duplicate rows
+> - Find missing/NA values
+> - Check for any possible anomaly
+
+This will also allow us to get a better understanding of the dataset
 
 First, count the values for each field and some statistics for numerical columns:
-
 
 ```python
 # Review the contents of each variable
@@ -208,28 +203,26 @@ df.info()
 display(df.describe())
 ```
 
-    <class 'pandas.core.frame.DataFrame'>
+    <class 'pandas.DataFrame'>
     RangeIndex: 12027 entries, 0 to 12026
     Data columns (total 11 columns):
-     #   Column                 Non-Null Count  Dtype  
-    ---  ------                 --------------  -----  
-     0   event_id               12027 non-null  int64  
-     1   time                   12027 non-null  object 
+     #   Column                 Non-Null Count  Dtype
+    ---  ------                 --------------  -----
+     0   event_id               12027 non-null  int64
+     1   time                   12027 non-null  str
      2   latitude               8594 non-null   float64
      3   longitude              8594 non-null   float64
      4   depth_km               8594 non-null   float64
      5   duration_magnitude_md  11628 non-null  float64
      6   md_error               11628 non-null  float64
-     7   area                   12027 non-null  object 
-     8   type                   12027 non-null  object 
-     9   review_level           12027 non-null  object 
-     10  year                   12027 non-null  int64  
-    dtypes: float64(5), int64(2), object(4)
-    memory usage: 1.0+ MB
-    
+     7   area                   12027 non-null  str
+     8   type                   12027 non-null  str
+     9   review_level           12027 non-null  str
+     10  year                   12027 non-null  int64
+    dtypes: float64(5), int64(2), str(4)
+    memory usage: 1.0 MB
 
-
-<div class="table-container">
+<div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -242,6 +235,7 @@ display(df.describe())
     .dataframe thead th {
         text-align: right;
     }
+
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -284,7 +278,7 @@ display(df.describe())
       <td>0.004525</td>
       <td>0.497769</td>
       <td>0.556318</td>
-      <td>5.629073e-14</td>
+      <td>5.551354e-17</td>
       <td>3.279678</td>
     </tr>
     <tr>
@@ -341,11 +335,7 @@ display(df.describe())
 </table>
 </div>
 
-
-⚠️ As we can see, there are fields like `latitude` and `md_error` with a count of less than 12027 entries. We need to understand why:
-
-Let's count `null` and `empty strings` for each field:
-
+As we can see, there are fields like `latitude` and `md_error` with a count of less than 12027 entries. We need to understand why.
 
 ```python
 # Print number of null values
@@ -382,12 +372,10 @@ print(df[df == ""].sum())
     review_level               0
     year                     0.0
     dtype: object
-    
 
 We have some null values, but zero empty strings. This simplifies data cleaning a bit.
 
 Just to be sure, I will confirm if the row index for all missing values of `latitude`, `longitude` and `depth_km` are the same:
-
 
 ```python
 # Create a variable for each list of indexes
@@ -396,32 +384,34 @@ longitude_null_index = df[df['longitude'].isnull()].index
 depth_km_null_index = df[df['depth_km'].isnull()].index
 
 # Compare each variable
-if set(latitude_null_index) == set(longitude_null_index) and set(longitude_null_index) == set(depth_km_null_index):
+if (set(latitude_null_index) == set(longitude_null_index)) and (set(longitude_null_index) == set(depth_km_null_index)):
     print("✅ All index sets are equal")
 else:
     print("❌ Not all index sets are equal")
 ```
 
     ✅ All index sets are equal
-    
 
-**💡 Why use `set()` to compare lists of indexes?**
+💡 Why use `set()` to compare lists of indexes?
 
 When you compare lists or indexes using `==`, order matters. For example:
+
 ```
 [1, 2] == [2, 1]  # ❌ False
 ```
+
 But if you convert both to `set()`:
+
 ```
 set([1, 2]) == set([2, 1])  # ✅ True
 ```
 
 This is especially useful when comparing null indexes because:
-* The order of the indexes usually doesn’t matter.
-* What matters is which rows have null values, not the order in which they appear.
+
+- The order of the indexes usually doesn’t matter.
+- What matters is which rows have null values, not the order in which they appear.
 
 Before more in-depth analysis of the three previous variables, I'd like to know the date range:
-
 
 ```python
 # Check the min and max values of `time`. It has dtype <object>. Let's try to check the values before any type conversion
@@ -429,18 +419,16 @@ print('Min time value: ', min(df['time']), ' ... ', 'Max time value: ', max(df['
 ```
 
     Min time value:  2011-04-20T00:27:24Z  ...  Max time value:  2024-12-31T17:02:32Z
-    
 
-The dataset provides seismic activity from april 2011 up to the end of 2024.
+The dataset registers seismic activity from april 2011 up to the end of 2024.
 
 ---
 
-### 2.2 Visualization:
+**Visual Exploration**
 
 Let's start analyzing the fields `latitude`, `longitude` and `depth_km`, and try to understand why there are missing values.
 
 First, create a histogram for each column:
-
 
 ```python
 ## Explore latitude, longitude and depth_km
@@ -472,22 +460,16 @@ plt.tight_layout()
 plt.show()
 ```
 
-
-    
 ![png]({{site.url}}/images/posts/vesuvius-analysis/2026-03-14-Seismic-Events-at-Mount-Vesuvius_18_0.png)
-    
 
-
-Both `latitude` and `longitude` are close to a normal distribution and have a very small spread (st. deviation less than 0,005). On the other hand, `depth_km` shows a highly right-skewed distribution, where the majority of data is clustered at lower depths with rapid decline in frequency as depth increases.
+Both `latitude` and `longitude` are close to a normal distribution and have a very small spread (st. deviation less than 0,005). On the other hand, `depth_km` shows a highly right-skewed distribution, where the majority of data is cluster at lower depths with rapid decline in frequency as depth increases.
 
 How does the dataset look where `latitude` (which applies the same for `longitude` and `depth_km`) is null?
-
 
 ```python
 # Display the dataframe where latitude is empty or null
 display(df[df['latitude'].isnull()])
 ```
-
 
 <div class="table-container">
 <style scoped>
@@ -502,6 +484,7 @@ display(df[df['latitude'].isnull()])
     .dataframe thead th {
         text-align: right;
     }
+
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -680,14 +663,10 @@ display(df[df['latitude'].isnull()])
 <p>3433 rows × 11 columns</p>
 </div>
 
-
-I find interesting that, for those observations where latitude is empty, the `duration_magnitude_md` is very low (or close to zero). 
-Let's compare how the `duration_magnitude_md` series is distributed for all data vs when `latitude` is null
-
+I find interesting that, for those events where latitude is empty, the `duration_magnitude_md` is very low (or close to zero).
+Let's compare how the `duration_magnitude_md` series is distributed for all data vs when `latitude` is null.
 
 ```python
-import seaborn as sns
-import matplotlib.pyplot as plt
 import matplotlib.dates as mdates # For date formatting later in time series plots
 
 # Create figure and a single axis
@@ -696,8 +675,8 @@ ax = plt.gca()
 
 # Chart 1: All data
 sns.histplot(
-    data=df, 
-    x='duration_magnitude_md', 
+    data=df,
+    x='duration_magnitude_md',
     bins=50,
     color='#6A5ACD',
     alpha=0.5,  # transparencia
@@ -727,71 +706,108 @@ ax.legend()
 plt.show()
 ```
 
-
-    
 ![png]({{site.url}}/images/posts/vesuvius-analysis/2026-03-14-Seismic-Events-at-Mount-Vesuvius_22_0.png)
-    
-
 
 **Initial Conclusion**
 
-There is some displacement to the left of the distribution when `latitude` is null in comparison to the general distribution, suggesting (but not confirmed yet) that the lack of a latitude value **is not a random event** within the dataset. There could be a correlation between having a null `latitude` and the values of  `duration_magnitude_md`.
+There is some displacement to the left of the distribution when `latitude` is null in comparison to the general distribution, suggesting (but not confirmed yet) that the lack of a latitude (and thus, longitude as well) value **is not a random event** within the dataset. There could be a correlation between having a null `latitude` and the values of `duration_magnitude_md`.
 
-Specifically, data points where the `latitude` is null tend to have lower or less than zero values of `duration_magnitude_md` compared to the overall dataset.
+Specifically, data points where the `latitude` is null tend to have lower values of `duration_magnitude_md` compared to the overall dataset and particularly, values less than zero.
 
 Reviewing the description of the columns again, we can see that:
 
->  **duration_magnitude_md**: Duration magnitude (Md) of the seismic event, a measure of its energy release. Md is often used for smaller magnitude events, and **negative values can indicate very small events (microearthquakes)**. 
+> `duration_magnitude_md`: Duration magnitude (Md) of the seismic event, a measure of its energy release. Md is often used for smaller magnitude events, and **negative values can indicate very small events (microearthquakes)**.
 
-And lastly, since variables `duration_magnitude_md` and `md_error` are related, we can confidently assume that their missing (null) values correspond to the same row index.
+And lastly, since variables `duration_magnitude_md` and `md_error` are related, we can confidently asume that the missing (null) values correspond to the same row index.
+
+---
+
+Let's make a scatter plot on a map using our coordinates:
+
+```python
+import geopandas as gpd
+import contextily as ctx
+
+# Filter out missing 'latitude' and 'md_error' rows
+df_filtered = df[df['latitude'].notna() & df['md_error'].notna()]
+
+# GeoDataFrame
+gdf = gpd.GeoDataFrame(
+    df_filtered,
+    geometry=gpd.points_from_xy(df_filtered['longitude'], df_filtered['latitude']),
+    crs="EPSG:4326"
+)
+
+# Reproject
+gdf = gdf.to_crs(epsg=3857)
+
+# Plot
+fig, ax = plt.subplots(figsize=(10, 5))
+
+# Markersize
+min_size = 10
+max_size = 200
+
+size = (
+    (df_filtered['depth_km'] - df_filtered['depth_km'].min()) /
+    (df_filtered['depth_km'].max() - df_filtered['depth_km'].min())
+) * (max_size - min_size) + min_size
+
+gdf.plot(
+    ax=ax,
+    column='duration_magnitude_md',
+    cmap='plasma_r',
+    markersize=size,
+    alpha=0.2,
+    legend=True,
+    legend_kwds={'label': 'Duration Magnitude (Md)'}
+)
+
+# Basemap
+ctx.add_basemap(ax, source=ctx.providers.CartoDB.Positron)
+
+ax.set_axis_off()
+plt.show()
+```
+
+![png]({{site.url}}/images/posts/vesuvius-analysis/2026-03-14-Seismic-Events-at-Mount-Vesuvius_25_0.png)
 
 **Categorical fields**
 
-I would like to know the unique values of the categorical variables: `area`, `type`, `review_level`
-
+I would like to know the unique values of the categorical variables: [`area`, `type`, `review_level`]
 
 ```python
 df[['area', 'type', 'review_level']].apply(lambda col: col.unique())
 ```
-
-
-
 
     area                  [Mount Vesuvius]
     type                      [earthquake]
     review_level    [revised, preliminary]
     dtype: object
 
-
-
 Only the `review_level` field contains more than one unique value.
 
-Interestingly, only 2 entries are labeled as _revised_ , while all others fall under the _preliminary_ category. 
+Interestingly, only 2 entries are labeled as _revised_ , while all others fall under the _preliminary_ category.
 The three categorical fields don't add too much information to the dataset. We already know that seismic events were recorded around Mount Vesuvius, and on latitude and longitude locations practically identical.
-
 
 ```python
 # Count the number of values for each review level
 df['review_level'].value_counts()
 ```
 
-
-
-
     review_level
     preliminary    12025
     revised            2
     Name: count, dtype: int64
 
-
 ---
 
-### 2.3 How about some Time Series analysis now?
+**How about some time series analysis now?**
 
 To perform time series analysis, we'll do the following:
-* Convert the `time` field to a proper timedate type.
-* Add time frames for week,  month number and month name
 
+- Convert the `time` field to a proper timedate type.
+- Add time frames for week, month number and month name
 
 ```python
 # Filter out years 2011 and 2012 (only 1 event each)
@@ -811,7 +827,6 @@ df['short_month_name'] = df['time'].dt.month_name().str[:3] + ' ' + df['time'].d
 display(df.head())
 ```
 
-
 <div class="table-container">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -825,6 +840,7 @@ display(df.head())
     .dataframe thead th {
         text-align: right;
     }
+
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -948,9 +964,7 @@ display(df.head())
 </table>
 </div>
 
-
-Then, create line plots for each time frame: _yearly, quarterly, monthly, weekly_ and _daily_.
-
+Then, create line plots for each time frame: yearly, quarterly, monthly, weekly and daily.
 
 ```python
 ## Line plots in different time frames
@@ -1013,53 +1027,51 @@ plt.tight_layout(rect=[0, 0.03, 1, 0.98])
 plt.show()
 ```
 
+![png]({{site.url}}/images/posts/vesuvius-analysis/2026-03-14-Seismic-Events-at-Mount-Vesuvius_33_0.png)
 
-    
-![png]({{site.url}}/images/posts/vesuvius-analysis/2026-03-14-Seismic-Events-at-Mount-Vesuvius_31_0.png)
-    
+### A few comments and conclusions here:
 
-
-## A few comments and insights here:
-
-**1. Total Events per Year:** 
+**1. Total Events per Year:**
 This plot gives us the long-term trend over the last decade.
 
-* Overall Trend: There is a clear upward trend in the number of seismic events from 2013 to 2024.
+- Overall Trend: There is a clear upward trend in the number of seismic events from 2013 to 2024.
 
-* Peak Activity: The activity peaked in 2018, which stands out as the year with the highest number of recorded events (over 1300).
+- Peak Activity: The activity peaked in 2018, which stands out as the year with the highest number of recorded events (over 1300).
 
-* Periods of Change: After the 2018 peak, there was a slight decline and stabilization period until about 2022. From 2022 to 2024, the activity appears to be on the rise again
+- Periods of Change: After the 2018 peak, there was a slight decline and stabilization period until about 2022. From 2022 to 2024, the activity appears to be on the rise again
 
 **Conclusion**: On an annual basis, the area has become more seismically active over this period, with 2018 being a particularly active year.
 
 **2. Total Events per Quarter:**
 This chart breaks down the yearly trend and reveals more detailed seasonal or periodic patterns.
 
-* Volatility: The quarterly data is much more volatile than the annual data. It shows that the increase in yearly events is not a smooth process but is driven by specific quarters with very high activity.
+- Volatility: The quarterly data is much more volatile than the annual data. It shows that the increase in yearly events is not a smooth process but is driven by \* specific quarters with very high activity.
 
-* Identifying Peaks: The 2018 annual peak is clearly attributable to very high activity in the second and third quarters.
+- Identifying Peaks: The 2018 annual peak is clearly attributable to very high activity in the second and third quarters.
 
-* Recent Trend: The chart clearly shows a strong, consistent rise in activity from 2013 to 2018, and again throughout 2023 up to 2024, confirming the recent upward trend seen in the annual chart. You can see this same behaviour in the Monthly and Weekly plots
+- Recent Trend: The chart clearly shows a strong, consistent rise in activity from 2013 to 2018, and again throughout 2023 up to 2024, confirming the recent upward trend seen in the annual chart. You can see this same behaviour in the Monthly and Weekly plots
 
 **Conclusion**: The quarterly view highlights the episodic nature of the seismic activity. The long-term trend is composed of periods of relative quiet followed by significant bursts of activity lasting one or more quarters.
 
 **3. Total Events per Month and per Week:**
 These two plots provide an even more granular view.
 
-* Identifying Peaks: Even though 2018 is the year with the most events, 2019 shows a period of extreme seismic activity, of over 150 which can be seen again in the daily chart, around march
+- Identifying Peaks: Even though 2018 is the year with the most events, 2019 shows a period of extreme seismic activity, of over 150 which can be seen again in the daily chart, around march
 
-* Lack of Seasonality: There doesn't appear to be a simple, repeating seasonal pattern. The timing of peak months seems irregular from year to year.
+- Lack of Seasonality: There doesn't appear to be a simple, repeating seasonal pattern. The timing of peak months seems irregular from year to year.
 
 **Conclusion**: The monthly chart confirms that the activity is concentrated in short, intense bursts rather than being evenly distributed throughout the year.
 
 **4. Total Events per Day:**
 This chart shows the finest level of detail.
 
-* Volatility and Behavior: The plot shows that most days have a very low number of events. The activity is dominated by sharp, narrow spikes, which represent days with a sudden burst of many events.
+- Volatility and Behavior: The plot shows that most days have a very low number of events. The activity is dominated by sharp, narrow spikes, which represent days with a sudden burst of many events.
 
-* Major Events: The largest single spike on this chart corresponds to the peak activity in 2019, indicating a day of intense seismic release.
+- Major Events: The largest single spike on this chart corresponds to the peak activity in 2019, indicating a day of intense seismic release.
 
 **Conclusion**: The daily view provides the strongest evidence that the seismic activity occurs in concentrated spikes. The overall increase in yearly events is due to either more frequent or more intense swarms over time.
+
+---
 
 ## **Overall Summary**
 
