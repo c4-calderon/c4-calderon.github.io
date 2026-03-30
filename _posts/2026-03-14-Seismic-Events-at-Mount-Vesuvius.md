@@ -30,7 +30,7 @@ Taken from the TidyTuesday [post](https://github.com/rfordatascience/tidytuesday
 
 ## 1. Data Loading
 
-Source: [https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv]
+Source: [Seismic events at Mount Vesuvius](https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-05-13/vesuvius.csv)
 
 ```python
 # import libraries
@@ -222,7 +222,7 @@ display(df.describe())
     dtypes: float64(5), int64(2), str(4)
     memory usage: 1.0 MB
 
-<div>
+<div class="table-container">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
