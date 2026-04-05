@@ -39,7 +39,7 @@ Where:
 
 > Note: At the time of this analysis, the dataset was last updated on **October 1st, 2025**, so the data may vary slightly when you access it. The datasource currently has 415 rows and 13 columns
 
-You can download the data as JSON format using the API: (https://www.datos.gov.co/resource/ytme-6qnu.json)
+You can download the data as JSON format using the API: [https://www.datos.gov.co/resource/ytme-6qnu.json](https://www.datos.gov.co/resource/ytme-6qnu.json)
 
 ## 1. Import libraries and load the data
 
@@ -567,7 +567,7 @@ df['grid_operator'].unique().tolist()
      'CELSIA - Valle del Cauca',
      'CELSIA - Tolima']
 
-Interestingly, we notice some redundancy... `grid operators` has some very similar names:
+Interestingly, we notice some redundancy... **grid operators** has some very similar names:
 
 - CELSIA Colombia - Valle del Cauca <-> CELSIA - Valle del Cauca
 - CELSIA Colombia - Tolima <-> CELSIA - Tolima
@@ -645,8 +645,22 @@ import seaborn as sns
 ```
 
 ```python
-sns.set_theme(style='darkgrid')
+# 1. Apply the style first
+plt.style.use('fivethirtyeight')
 
+# 2. Refine fonts and colors (Added the missing comma)
+plt.rcParams.update({
+    'font.size': 10,
+    'axes.titlesize': 12,
+    'figure.facecolor': 'white', # <--- Added comma here
+    'axes.facecolor': 'white',
+    'savefig.facecolor': 'white',
+    'grid.color': '#E6E6E6'
+})
+```
+
+```python
+# How many observations by grid operator do we have?
 plt.figure(figsize=(6,3))
 sns.countplot(data=df, y='grid_operator', stat='count')
 plt.suptitle('Entries by Grid Operator')
@@ -654,9 +668,10 @@ plt.ylabel('')
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_29_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_31_0.png)
 
 ```python
+# How many observations by grid level do we have?
 plt.figure(figsize=(6,3))
 sns.countplot(data=df, y='grid_level', stat='count')
 plt.suptitle('Entries by Grid Level')
@@ -664,7 +679,7 @@ plt.ylabel('')
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_30_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_32_0.png)
 
 According to the features descriptions, the `total_c_kWh` feature should be highly correlated to the other variables related to the cost structure. Let's check if it is true with a correlation heatmap
 
@@ -676,7 +691,7 @@ sns.heatmap(correl_matrix, annot=True, cmap='coolwarm')
 
     <Axes: >
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_32_1.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_34_1.png)
 
 A few features are highly correlated to `total_c_kWh`:
 
@@ -729,13 +744,13 @@ g.figure.suptitle('Analysis of Cost Features over Years', y=1.02, fontsize=16)
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_35_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_37_0.png)
 
 ## 5. Data Analysis
 
 I have prepared the following questions for our data analysis step. Let's see if we can answer them.
 
-1. What is the **average Total Unit Cost (total_c_kWh)** by grid level across the entire period?
+### 1. What is the **average Total Unit Cost (total_c_kWh)** by grid level across the entire period?
 
 ```python
 total_cost_by_grid_level = df.groupby('grid_level')['total_c_kWh'].mean().reset_index()
@@ -798,7 +813,7 @@ print(nivel_2_3[['grid_level', 'total_c_kWh', 'deviation', 'pct_deviation']].rou
 
 > 💡 Tip: You can add `.reset_index()` at the end of your command to return a stardard Dataframe
 
-2. How are the records distributed among the different grid operators? Which operator has the most entries in the dataset?
+### 2. How are the records distributed among the different grid operators? Which operator has the most entries in the dataset?
 
 ```python
 df['grid_operator'].value_counts().reset_index()
@@ -852,7 +867,7 @@ df['grid_operator'].value_counts().reset_index()
 </table>
 </div>
 
-3. What is the **average Monthly Fixed Charge (Cfm,j)** and how does it vary between operators and voltage levels?
+### 3. What is the **average Monthly Fixed Charge (Cfm,j)** and how does it vary between operators and voltage levels?
 
 ```python
 df.groupby(['grid_operator', 'grid_level'])['fmc_j_bill'].agg('mean').round(2).reset_index()
@@ -1034,9 +1049,9 @@ plt.tight_layout()
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_47_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_49_0.png)
 
-4. What percentage of the **Total Unit Cost (total_c_kWh)** does each main component represent on average (Cost of Purchase, STN Transport Charge, SDL Transport Charge, Commercialization Margin, etc.), globally and by operator?
+### 4. What percentage of the **Total Unit Cost (total_c_kWh)** does each main component represent on average (Cost of Purchase, STN Transport Charge, SDL Transport Charge, Commercialization Margin, etc.), globally and by operator?
 
 ```python
 # Global calculation
@@ -1078,73 +1093,73 @@ calc_df = df.groupby('grid_operator')[features + ['total_c_kWh']].sum()
 percentage_df = calc_df[features].div(calc_df['total_c_kWh'], axis=0)
 
 # 3. Apply the 3-decimal percentage formatting for a beautiful display
-percentage_df.style.format("{:.2%}")
+percentage_df.reset_index().style.format({
+    col: '{:.2%}' for col in features
+})
 ```
 
     --- Average cost by component and operator: ---
 
+<div class="table-container">
 <style type="text/css">
 </style>
-<table id="T_19807">
+<table id="T_22346">
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_19807_level0_col0" class="col_heading level0 col0" >buy_cost_gm_i</th>
-      <th id="T_19807_level0_col1" class="col_heading level0 col1" >transmission_charge_stn_tm</th>
-      <th id="T_19807_level0_col2" class="col_heading level0 col2" >transmission_charge_sdl_dn_m</th>
-      <th id="T_19807_level0_col3" class="col_heading level0 col3" >retail_margin_n_cvm</th>
-      <th id="T_19807_level0_col4" class="col_heading level0 col4" >cost_g_t_loss_prn_m</th>
-      <th id="T_19807_level0_col5" class="col_heading level0 col5" >restrictions_rm</th>
-    </tr>
-    <tr>
-      <th class="index_name level0" >grid_operator</th>
-      <th class="blank col0" >&nbsp;</th>
-      <th class="blank col1" >&nbsp;</th>
-      <th class="blank col2" >&nbsp;</th>
-      <th class="blank col3" >&nbsp;</th>
-      <th class="blank col4" >&nbsp;</th>
-      <th class="blank col5" >&nbsp;</th>
+      <th id="T_22346_level0_col0" class="col_heading level0 col0" >grid_operator</th>
+      <th id="T_22346_level0_col1" class="col_heading level0 col1" >buy_cost_gm_i</th>
+      <th id="T_22346_level0_col2" class="col_heading level0 col2" >transmission_charge_stn_tm</th>
+      <th id="T_22346_level0_col3" class="col_heading level0 col3" >transmission_charge_sdl_dn_m</th>
+      <th id="T_22346_level0_col4" class="col_heading level0 col4" >retail_margin_n_cvm</th>
+      <th id="T_22346_level0_col5" class="col_heading level0 col5" >cost_g_t_loss_prn_m</th>
+      <th id="T_22346_level0_col6" class="col_heading level0 col6" >restrictions_rm</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th id="T_19807_level0_row0" class="row_heading level0 row0" >CELSIA - Tolima</th>
-      <td id="T_19807_row0_col0" class="data row0 col0" >38.52%</td>
-      <td id="T_19807_row0_col1" class="data row0 col1" >6.83%</td>
-      <td id="T_19807_row0_col2" class="data row0 col2" >24.26%</td>
-      <td id="T_19807_row0_col3" class="data row0 col3" >19.53%</td>
-      <td id="T_19807_row0_col4" class="data row0 col4" >7.91%</td>
-      <td id="T_19807_row0_col5" class="data row0 col5" >2.95%</td>
+      <th id="T_22346_level0_row0" class="row_heading level0 row0" >0</th>
+      <td id="T_22346_row0_col0" class="data row0 col0" >CELSIA - Tolima</td>
+      <td id="T_22346_row0_col1" class="data row0 col1" >38.52%</td>
+      <td id="T_22346_row0_col2" class="data row0 col2" >6.83%</td>
+      <td id="T_22346_row0_col3" class="data row0 col3" >24.26%</td>
+      <td id="T_22346_row0_col4" class="data row0 col4" >19.53%</td>
+      <td id="T_22346_row0_col5" class="data row0 col5" >7.91%</td>
+      <td id="T_22346_row0_col6" class="data row0 col6" >2.95%</td>
     </tr>
     <tr>
-      <th id="T_19807_level0_row1" class="row_heading level0 row1" >CELSIA - Valle del Cauca</th>
-      <td id="T_19807_row1_col0" class="data row1 col0" >45.04%</td>
-      <td id="T_19807_row1_col1" class="data row1 col1" >7.60%</td>
-      <td id="T_19807_row1_col2" class="data row1 col2" >26.22%</td>
-      <td id="T_19807_row1_col3" class="data row1 col3" >11.37%</td>
-      <td id="T_19807_row1_col4" class="data row1 col4" >6.58%</td>
-      <td id="T_19807_row1_col5" class="data row1 col5" >3.19%</td>
+      <th id="T_22346_level0_row1" class="row_heading level0 row1" >1</th>
+      <td id="T_22346_row1_col0" class="data row1 col0" >CELSIA - Valle del Cauca</td>
+      <td id="T_22346_row1_col1" class="data row1 col1" >45.04%</td>
+      <td id="T_22346_row1_col2" class="data row1 col2" >7.60%</td>
+      <td id="T_22346_row1_col3" class="data row1 col3" >26.22%</td>
+      <td id="T_22346_row1_col4" class="data row1 col4" >11.37%</td>
+      <td id="T_22346_row1_col5" class="data row1 col5" >6.58%</td>
+      <td id="T_22346_row1_col6" class="data row1 col6" >3.19%</td>
     </tr>
     <tr>
-      <th id="T_19807_level0_row2" class="row_heading level0 row2" >EMCALI - Cali</th>
-      <td id="T_19807_row2_col0" class="data row2 col0" >47.74%</td>
-      <td id="T_19807_row2_col1" class="data row2 col1" >8.08%</td>
-      <td id="T_19807_row2_col2" class="data row2 col2" >29.57%</td>
-      <td id="T_19807_row2_col3" class="data row2 col3" >4.46%</td>
-      <td id="T_19807_row2_col4" class="data row2 col4" >6.74%</td>
-      <td id="T_19807_row2_col5" class="data row2 col5" >3.41%</td>
+      <th id="T_22346_level0_row2" class="row_heading level0 row2" >2</th>
+      <td id="T_22346_row2_col0" class="data row2 col0" >EMCALI - Cali</td>
+      <td id="T_22346_row2_col1" class="data row2 col1" >47.74%</td>
+      <td id="T_22346_row2_col2" class="data row2 col2" >8.08%</td>
+      <td id="T_22346_row2_col3" class="data row2 col3" >29.57%</td>
+      <td id="T_22346_row2_col4" class="data row2 col4" >4.46%</td>
+      <td id="T_22346_row2_col5" class="data row2 col5" >6.74%</td>
+      <td id="T_22346_row2_col6" class="data row2 col6" >3.41%</td>
     </tr>
     <tr>
-      <th id="T_19807_level0_row3" class="row_heading level0 row3" >ENEL Bogotá - Cundinamarca</th>
-      <td id="T_19807_row3_col0" class="data row3 col0" >45.11%</td>
-      <td id="T_19807_row3_col1" class="data row3 col1" >7.64%</td>
-      <td id="T_19807_row3_col2" class="data row3 col2" >29.56%</td>
-      <td id="T_19807_row3_col3" class="data row3 col3" >7.94%</td>
-      <td id="T_19807_row3_col4" class="data row3 col4" >6.54%</td>
-      <td id="T_19807_row3_col5" class="data row3 col5" >3.21%</td>
+      <th id="T_22346_level0_row3" class="row_heading level0 row3" >3</th>
+      <td id="T_22346_row3_col0" class="data row3 col0" >ENEL Bogotá - Cundinamarca</td>
+      <td id="T_22346_row3_col1" class="data row3 col1" >45.11%</td>
+      <td id="T_22346_row3_col2" class="data row3 col2" >7.64%</td>
+      <td id="T_22346_row3_col3" class="data row3 col3" >29.56%</td>
+      <td id="T_22346_row3_col4" class="data row3 col4" >7.94%</td>
+      <td id="T_22346_row3_col5" class="data row3 col5" >6.54%</td>
+      <td id="T_22346_row3_col6" class="data row3 col6" >3.21%</td>
     </tr>
   </tbody>
 </table>
+</div>
 
 ```python
 # Let's create a stacked bar chart showing cost components by operator
@@ -1153,7 +1168,7 @@ operator_pct = percentage_df.groupby('grid_operator').mean()
 
 # Create the stacked bar chart
 fig, ax = plt.subplots(figsize=(10, 5))
-operator_pct.plot(kind='barh', stacked=True, ax=ax, colormap='Dark2')
+operator_pct.plot(kind='barh', stacked=True, ax=ax)
 
 ax.set_xlabel('Percentage of Total Cost')
 ax.set_ylabel('')
@@ -1165,7 +1180,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_51_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_53_0.png)
 
 - **Buy Cost (buy_cost_gm_i - Teal)**: This is the largest component for all operators, accounting for roughly 40% to 50% of the total cost. Interestingly, EMCALI - Cali has the highest percentage dedicated to buying energy, while CELSIA - Tolima has the lowest relative share.
 
@@ -1177,7 +1192,7 @@ plt.show()
 
 - **EMCALI - Cali** has a very thin green slice, suggesting they operate on much tighter commercial margins.
 
-5. How has the **Total Unit Cost (total_c_kWh)** evolved month by month from January 2024 to September 2025? Is there any upward or downward trend?
+### 5. How has the **Total Unit Cost (total_c_kWh)** evolved month by month from January 2024 to September 2025? Is there any upward or downward trend?
 
 ```python
 # We can't use the period column right away because is a categorical type, and Python
@@ -1215,14 +1230,14 @@ plt.tight_layout() # Prevents the legend from being cut off
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_55_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_57_0.png)
 
 > The line chart shows the evolution of the Total Unit Cost (kWh). It doesn't follow a steady upward or downward trend. The price fluctuates between 680 and ~770, showing signs of volatility over months.
 
 ```python
 data = df.groupby(['date', 'grid_operator'])['total_c_kWh'].mean().reset_index()
 
-plt.figure(figsize=(8,4))
+plt.figure(figsize=(8,5))
 sns.lineplot(data=data, x='date', y='total_c_kWh',hue='grid_operator' ,marker='o')
 
 plt.title('Total cost evolution $/kWh (2024-2025)')
@@ -1235,11 +1250,11 @@ plt.tight_layout() # Prevents the legend from being cut off
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_57_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_59_0.png)
 
 > If we break down the line by operator, we find something very interesting: Only `CELSIA Tolima` has a sharp incrementing cost over time. Other operators show a price drop from May/2024.
 
-6. Which **network operator** has the **highest** and **lowest average CU Total** (total_c_kWh) for Low Voltage (B.T. = Nivel 1) users? (relevant for residential customers)
+### 6. Which **network operator** has the **highest** and **lowest average CU Total** (total_c_kWh) for Low Voltage (B.T. = Nivel 1) users? (relevant for residential customers)
 
 ```python
 data = df[df['grid_level'].str.startswith('Nivel 1')]
@@ -1350,7 +1365,7 @@ data.groupby(['grid_operator', 'grid_level'])['total_c_kWh'].agg('mean').sort_va
 > - `EMCALI - Cali` has the lowest cost: 720.23
 > - `CELSIA - Tolima` has the highest cost: 935.64
 
-7. To what extent do **losses (Cost G, T, Losses)** and **restrictions (Rm)** contribute to the final cost? Does this contribution vary by voltage level?
+### 7. To what extent do **losses (Cost G, T, Losses)** and **restrictions (Rm)** contribute to the final cost? Does this contribution vary by voltage level?
 
 ```python
 print('--- Contribution of LOSSES and RESTRICTIONS to total cost, by Grid Level: ---')
@@ -1379,13 +1394,13 @@ percentage_df[['cost_g_t_loss_prn_m', 'restrictions_rm']].style.format("{:.2%}")
 
 <style type="text/css">
 </style>
-<table id="T_38cb9">
+<table id="T_06018">
   <thead>
     <tr>
       <th class="blank" >&nbsp;</th>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_38cb9_level0_col0" class="col_heading level0 col0" >cost_g_t_loss_prn_m</th>
-      <th id="T_38cb9_level0_col1" class="col_heading level0 col1" >restrictions_rm</th>
+      <th id="T_06018_level0_col0" class="col_heading level0 col0" >cost_g_t_loss_prn_m</th>
+      <th id="T_06018_level0_col1" class="col_heading level0 col1" >restrictions_rm</th>
     </tr>
     <tr>
       <th class="index_name level0" >grid_operator</th>
@@ -1396,108 +1411,108 @@ percentage_df[['cost_g_t_loss_prn_m', 'restrictions_rm']].style.format("{:.2%}")
   </thead>
   <tbody>
     <tr>
-      <th id="T_38cb9_level0_row0" class="row_heading level0 row0" rowspan="5">CELSIA - Tolima</th>
-      <th id="T_38cb9_level1_row0" class="row_heading level1 row0" >Nivel 1 (Propiedad Cliente)</th>
-      <td id="T_38cb9_row0_col0" class="data row0 col0" >10.01%</td>
-      <td id="T_38cb9_row0_col1" class="data row0 col1" >2.82%</td>
+      <th id="T_06018_level0_row0" class="row_heading level0 row0" rowspan="5">CELSIA - Tolima</th>
+      <th id="T_06018_level1_row0" class="row_heading level1 row0" >Nivel 1 (Propiedad Cliente)</th>
+      <td id="T_06018_row0_col0" class="data row0 col0" >10.01%</td>
+      <td id="T_06018_row0_col1" class="data row0 col1" >2.82%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row1" class="row_heading level1 row1" >Nivel 1 (Propiedad Compartida)</th>
-      <td id="T_38cb9_row1_col0" class="data row1 col0" >9.44%</td>
-      <td id="T_38cb9_row1_col1" class="data row1 col1" >2.66%</td>
+      <th id="T_06018_level1_row1" class="row_heading level1 row1" >Nivel 1 (Propiedad Compartida)</th>
+      <td id="T_06018_row1_col0" class="data row1 col0" >9.44%</td>
+      <td id="T_06018_row1_col1" class="data row1 col1" >2.66%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row2" class="row_heading level1 row2" >Nivel 1 (Propiedad OR)</th>
-      <td id="T_38cb9_row2_col0" class="data row2 col0" >8.94%</td>
-      <td id="T_38cb9_row2_col1" class="data row2 col1" >2.52%</td>
+      <th id="T_06018_level1_row2" class="row_heading level1 row2" >Nivel 1 (Propiedad OR)</th>
+      <td id="T_06018_row2_col0" class="data row2 col0" >8.94%</td>
+      <td id="T_06018_row2_col1" class="data row2 col1" >2.52%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row3" class="row_heading level1 row3" >Nivel 2</th>
-      <td id="T_38cb9_row3_col0" class="data row3 col0" >5.29%</td>
-      <td id="T_38cb9_row3_col1" class="data row3 col1" >3.37%</td>
+      <th id="T_06018_level1_row3" class="row_heading level1 row3" >Nivel 2</th>
+      <td id="T_06018_row3_col0" class="data row3 col0" >5.29%</td>
+      <td id="T_06018_row3_col1" class="data row3 col1" >3.37%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row4" class="row_heading level1 row4" >Nivel 3</th>
-      <td id="T_38cb9_row4_col0" class="data row4 col0" >4.37%</td>
-      <td id="T_38cb9_row4_col1" class="data row4 col1" >3.71%</td>
+      <th id="T_06018_level1_row4" class="row_heading level1 row4" >Nivel 3</th>
+      <td id="T_06018_row4_col0" class="data row4 col0" >4.37%</td>
+      <td id="T_06018_row4_col1" class="data row4 col1" >3.71%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level0_row5" class="row_heading level0 row5" rowspan="5">CELSIA - Valle del Cauca</th>
-      <th id="T_38cb9_level1_row5" class="row_heading level1 row5" >Nivel 1 (Propiedad Cliente)</th>
-      <td id="T_38cb9_row5_col0" class="data row5 col0" >8.34%</td>
-      <td id="T_38cb9_row5_col1" class="data row5 col1" >3.07%</td>
+      <th id="T_06018_level0_row5" class="row_heading level0 row5" rowspan="5">CELSIA - Valle del Cauca</th>
+      <th id="T_06018_level1_row5" class="row_heading level1 row5" >Nivel 1 (Propiedad Cliente)</th>
+      <td id="T_06018_row5_col0" class="data row5 col0" >8.34%</td>
+      <td id="T_06018_row5_col1" class="data row5 col1" >3.07%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row6" class="row_heading level1 row6" >Nivel 1 (Propiedad Compartida)</th>
-      <td id="T_38cb9_row6_col0" class="data row6 col0" >7.97%</td>
-      <td id="T_38cb9_row6_col1" class="data row6 col1" >2.93%</td>
+      <th id="T_06018_level1_row6" class="row_heading level1 row6" >Nivel 1 (Propiedad Compartida)</th>
+      <td id="T_06018_row6_col0" class="data row6 col0" >7.97%</td>
+      <td id="T_06018_row6_col1" class="data row6 col1" >2.93%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row7" class="row_heading level1 row7" >Nivel 1 (Propiedad OR)</th>
-      <td id="T_38cb9_row7_col0" class="data row7 col0" >7.63%</td>
-      <td id="T_38cb9_row7_col1" class="data row7 col1" >2.80%</td>
+      <th id="T_06018_level1_row7" class="row_heading level1 row7" >Nivel 1 (Propiedad OR)</th>
+      <td id="T_06018_row7_col0" class="data row7 col0" >7.63%</td>
+      <td id="T_06018_row7_col1" class="data row7 col1" >2.80%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row8" class="row_heading level1 row8" >Nivel 2</th>
-      <td id="T_38cb9_row8_col0" class="data row8 col0" >3.97%</td>
-      <td id="T_38cb9_row8_col1" class="data row8 col1" >3.44%</td>
+      <th id="T_06018_level1_row8" class="row_heading level1 row8" >Nivel 2</th>
+      <td id="T_06018_row8_col0" class="data row8 col0" >3.97%</td>
+      <td id="T_06018_row8_col1" class="data row8 col1" >3.44%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row9" class="row_heading level1 row9" >Nivel 3</th>
-      <td id="T_38cb9_row9_col0" class="data row9 col0" >3.93%</td>
-      <td id="T_38cb9_row9_col1" class="data row9 col1" >3.99%</td>
+      <th id="T_06018_level1_row9" class="row_heading level1 row9" >Nivel 3</th>
+      <td id="T_06018_row9_col0" class="data row9 col0" >3.93%</td>
+      <td id="T_06018_row9_col1" class="data row9 col1" >3.99%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level0_row10" class="row_heading level0 row10" rowspan="5">EMCALI - Cali</th>
-      <th id="T_38cb9_level1_row10" class="row_heading level1 row10" >Nivel 1 (Propiedad Cliente)</th>
-      <td id="T_38cb9_row10_col0" class="data row10 col0" >8.21%</td>
-      <td id="T_38cb9_row10_col1" class="data row10 col1" >3.18%</td>
+      <th id="T_06018_level0_row10" class="row_heading level0 row10" rowspan="5">EMCALI - Cali</th>
+      <th id="T_06018_level1_row10" class="row_heading level1 row10" >Nivel 1 (Propiedad Cliente)</th>
+      <td id="T_06018_row10_col0" class="data row10 col0" >8.21%</td>
+      <td id="T_06018_row10_col1" class="data row10 col1" >3.18%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row11" class="row_heading level1 row11" >Nivel 1 (Propiedad Compartida)</th>
-      <td id="T_38cb9_row11_col0" class="data row11 col0" >8.04%</td>
-      <td id="T_38cb9_row11_col1" class="data row11 col1" >3.11%</td>
+      <th id="T_06018_level1_row11" class="row_heading level1 row11" >Nivel 1 (Propiedad Compartida)</th>
+      <td id="T_06018_row11_col0" class="data row11 col0" >8.04%</td>
+      <td id="T_06018_row11_col1" class="data row11 col1" >3.11%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row12" class="row_heading level1 row12" >Nivel 1 (Propiedad OR)</th>
-      <td id="T_38cb9_row12_col0" class="data row12 col0" >7.86%</td>
-      <td id="T_38cb9_row12_col1" class="data row12 col1" >3.05%</td>
+      <th id="T_06018_level1_row12" class="row_heading level1 row12" >Nivel 1 (Propiedad OR)</th>
+      <td id="T_06018_row12_col0" class="data row12 col0" >7.86%</td>
+      <td id="T_06018_row12_col1" class="data row12 col1" >3.05%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row13" class="row_heading level1 row13" >Nivel 2</th>
-      <td id="T_38cb9_row13_col0" class="data row13 col0" >4.24%</td>
-      <td id="T_38cb9_row13_col1" class="data row13 col1" >3.75%</td>
+      <th id="T_06018_level1_row13" class="row_heading level1 row13" >Nivel 2</th>
+      <td id="T_06018_row13_col0" class="data row13 col0" >4.24%</td>
+      <td id="T_06018_row13_col1" class="data row13 col1" >3.75%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row14" class="row_heading level1 row14" >Nivel 3</th>
-      <td id="T_38cb9_row14_col0" class="data row14 col0" >4.33%</td>
-      <td id="T_38cb9_row14_col1" class="data row14 col1" >4.20%</td>
+      <th id="T_06018_level1_row14" class="row_heading level1 row14" >Nivel 3</th>
+      <td id="T_06018_row14_col0" class="data row14 col0" >4.33%</td>
+      <td id="T_06018_row14_col1" class="data row14 col1" >4.20%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level0_row15" class="row_heading level0 row15" rowspan="5">ENEL Bogotá - Cundinamarca</th>
-      <th id="T_38cb9_level1_row15" class="row_heading level1 row15" >Nivel 1 (Propiedad Cliente)</th>
-      <td id="T_38cb9_row15_col0" class="data row15 col0" >8.59%</td>
-      <td id="T_38cb9_row15_col1" class="data row15 col1" >3.09%</td>
+      <th id="T_06018_level0_row15" class="row_heading level0 row15" rowspan="5">ENEL Bogotá - Cundinamarca</th>
+      <th id="T_06018_level1_row15" class="row_heading level1 row15" >Nivel 1 (Propiedad Cliente)</th>
+      <td id="T_06018_row15_col0" class="data row15 col0" >8.59%</td>
+      <td id="T_06018_row15_col1" class="data row15 col1" >3.09%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row16" class="row_heading level1 row16" >Nivel 1 (Propiedad Compartida)</th>
-      <td id="T_38cb9_row16_col0" class="data row16 col0" >8.32%</td>
-      <td id="T_38cb9_row16_col1" class="data row16 col1" >2.99%</td>
+      <th id="T_06018_level1_row16" class="row_heading level1 row16" >Nivel 1 (Propiedad Compartida)</th>
+      <td id="T_06018_row16_col0" class="data row16 col0" >8.32%</td>
+      <td id="T_06018_row16_col1" class="data row16 col1" >2.99%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row17" class="row_heading level1 row17" >Nivel 1 (Propiedad OR)</th>
-      <td id="T_38cb9_row17_col0" class="data row17 col0" >8.07%</td>
-      <td id="T_38cb9_row17_col1" class="data row17 col1" >2.90%</td>
+      <th id="T_06018_level1_row17" class="row_heading level1 row17" >Nivel 1 (Propiedad OR)</th>
+      <td id="T_06018_row17_col0" class="data row17 col0" >8.07%</td>
+      <td id="T_06018_row17_col1" class="data row17 col1" >2.90%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row18" class="row_heading level1 row18" >Nivel 2</th>
-      <td id="T_38cb9_row18_col0" class="data row18 col0" >3.22%</td>
-      <td id="T_38cb9_row18_col1" class="data row18 col1" >3.43%</td>
+      <th id="T_06018_level1_row18" class="row_heading level1 row18" >Nivel 2</th>
+      <td id="T_06018_row18_col0" class="data row18 col0" >3.22%</td>
+      <td id="T_06018_row18_col1" class="data row18 col1" >3.43%</td>
     </tr>
     <tr>
-      <th id="T_38cb9_level1_row19" class="row_heading level1 row19" >Nivel 3</th>
-      <td id="T_38cb9_row19_col0" class="data row19 col0" >3.46%</td>
-      <td id="T_38cb9_row19_col1" class="data row19 col1" >3.79%</td>
+      <th id="T_06018_level1_row19" class="row_heading level1 row19" >Nivel 3</th>
+      <td id="T_06018_row19_col0" class="data row19 col0" >3.46%</td>
+      <td id="T_06018_row19_col1" class="data row19 col1" >3.79%</td>
     </tr>
   </tbody>
 </table>
@@ -1508,7 +1523,7 @@ plt.figure(figsize=(8,5))
 ax = sns.barplot(
     data=percentage_df,
     y='grid_level', x='cost_g_t_loss_prn_m',
-    hue='grid_operator', palette='Dark2')
+    hue='grid_operator')
 
 plt.title('Loss by Grid Level')
 plt.ylabel('')
@@ -1519,7 +1534,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_64_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_66_0.png)
 
 > **Loss** (cost_g_t_loss_prn_m) contributes to Total Cost (total_c_kWh) **around 4% to 10%**, clearly variating by `grid level`
 
@@ -1529,7 +1544,7 @@ plt.figure(figsize=(8,5))
 ax = sns.barplot(
     data=percentage_df,
     y='grid_level', x='restrictions_rm',
-    hue='grid_operator', palette='Dark2')
+    hue='grid_operator')
 
 plt.title('Restrictions by Grid Level')
 plt.ylabel('')
@@ -1540,16 +1555,16 @@ plt.tight_layout()
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_66_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_68_0.png)
 
 > **Restrictions** (restrictions_rm) contributes to Total Cost (total_c_kWh) **around 2.5% to 4%**, but slighly varies by grid level
 
-8. Compare the **Commercialization Margin** across operators: Are there significant differences? Which operator has the highest margin?
+### 8. Compare the **Commercialization Margin** across operators: Are there significant differences? Which operator has the highest margin?
 
 ```python
 # Let's answer this with a boxplot
 plt.figure(figsize=(8,5))
-sns.boxplot(data=df, x='retail_margin_n_cvm', y='grid_operator', palette='Dark2')
+sns.boxplot(data=df, x='retail_margin_n_cvm', y='grid_operator')
 plt.title('Distribution of Commercialization Margins by Grid Operator')
 plt.xticks(rotation=45)
 plt.ylabel('')
@@ -1558,7 +1573,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_69_0.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_71_0.png)
 
 > CELSIA - Tolima has much more higher and dispersed Margin cost than the other operators.
 >
@@ -1637,7 +1652,7 @@ df.groupby('grid_level')[['transmission_charge_stn_tm', 'transmission_charge_sdl
 
 > We've found an explanation on why do residential users pay higher unit costs than industrial users. Their SDL costs are much higher.
 
-10. Is there a **correlation** between the **Cost of Purchase (Gm,i)** and the **CU Total (total_c_kWh)**? In which months or periods does the purchase cost best explain the final price?
+### 10. Is there a **correlation** between the **Cost of Purchase (Gm,i)** and the **CU Total (total_c_kWh)**? In which months or periods does the purchase cost best explain the final price?
 
 ```python
 # If we go back to the correlation heatmap, we can see there's a coefficient of 0.15 of correlation
@@ -1655,7 +1670,7 @@ plt.ylabel('Total Cost ($/kWh)')
 
     Text(0, 0.5, 'Total Cost ($/kWh)')
 
-![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_75_1.png)
+![png]({{site.url}}/images/posts/electricity-rates/2026-04-05-Electricity-Rates-and-Costs_77_1.png)
 
 > **CELSIA - Tolima** has `Cost of Purchase` values with much less spread than the other operators. The Purchase Cost ranges from ~290 to ~315. It's unclear why it is significantly more stable than the others.
 >
