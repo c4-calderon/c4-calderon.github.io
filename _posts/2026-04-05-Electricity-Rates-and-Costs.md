@@ -1350,9 +1350,7 @@ fig1.write_html(
 fig1.show()   # ← previews interactively in the notebook
 ```
 
-{% raw %}
 {% include posts/electricity-rates/plotly-q5-overall-evolution.html %}
-{% endraw %}
 
 _Figure: Overall monthly average electricity cost (interactive — hover for exact values)._
 
@@ -1398,9 +1396,7 @@ fig2.write_html(
 fig2.show()   # ← previews interactively in the notebook
 ```
 
-{% raw %}
 {% include posts/electricity-rates/plotly-q5-by-operator.html %}
-{% endraw %}
 
 _Figure: Monthly average electricity cost by grid operator (interactive — hover for exact values, click legend to toggle lines)._
 
@@ -1461,9 +1457,7 @@ fig3.show()   # ← previews interactively in the notebook
 print("\n*Figure: 3-month rolling average smooths out monthly volatility, confirming the trend.")
 ```
 
-{% raw %}
 {% include posts/electricity-rates/plotly-q5-rolling-average.html %}
-{% endraw %}
 
 _Figure: 3-month rolling average smooths out monthly volatility, confirming the trend (interactive — hover for exact values, click legend to toggle operators)._
 
