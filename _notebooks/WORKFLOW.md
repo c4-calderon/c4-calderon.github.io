@@ -25,7 +25,7 @@ Open the new `.md` in `_posts/` and add the header at the very top:
 
 ```yaml
 ---
-title: 'Your Title Here'
+title: "Your Title Here"
 date: YYYY-MM-DD
 permalink: /posts/YYYY/MM/title/
 tags:
@@ -50,6 +50,24 @@ Jupyter often exports DataFrames as HTML tables wrapped in a simple `<div>`. To 
 - **Find:** `<div>` (at the start of a table block)
 - **Replace:** `<div class="table-container">`
 
+### D. Interactive Plotly Charts (Optional)
+
+If your analysis includes interactive Plotly charts, they require special handling:
+
+1.  **Export from the Notebook:** Use the `write_html` method to save the chart into the `_includes` directory.
+    ```python
+    fig.write_html(
+        "../_includes/posts/post-folder-name/chart-name.html",
+        full_html=False,
+        include_plotlyjs="cdn"
+    )
+    ```
+2.  **Add to Markdown:** In your `.md` post, reference the chart using the Jekyll include tag:
+    ```liquid
+    {% include posts/post-folder-name/chart-name.html %}
+    ```
+3.  **IMPORTANT:** Ensure the include tag is **not** wrapped in `{% raw %}` and `{% endraw %}` tags. These tags are sometimes added automatically during export or manual copying and will prevent the chart from rendering.
+
 ## 4. Preview Locally
 
 Run Jekyll locally to verify everything looks correct:
@@ -60,11 +78,12 @@ bundle exec jekyll serve
 
 ## 5. Commit and Push
 
-Once satisfied, add the new `.md` and the new images to git:
+Once satisfied, add the new `.md`, images, and includes to git:
 
 ```bash
 git add _posts/YYYY-MM-DD-title.md
 git add images/posts/post-folder-name/
+git add _includes/posts/post-folder-name/
 git commit -m "Add new post: Your Title"
 git push
 ```
