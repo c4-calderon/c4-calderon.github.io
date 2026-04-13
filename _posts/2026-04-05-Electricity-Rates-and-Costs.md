@@ -1638,6 +1638,7 @@ percentage_df[['cost_g_t_loss_prn_m', 'restrictions_rm']].style.format("{:.2%}")
 
     --- Contribution of LOSSES and RESTRICTIONS to total cost, by Grid Level: ---
 
+<div class="table-container">
 <style type="text/css">
 </style>
 <table id="T_1f0fc">
@@ -1762,6 +1763,7 @@ percentage_df[['cost_g_t_loss_prn_m', 'restrictions_rm']].style.format("{:.2%}")
     </tr>
   </tbody>
 </table>
+</div>
 
 ```python
 plt.figure(figsize=(12,6))
